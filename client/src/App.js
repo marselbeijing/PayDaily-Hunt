@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { AuthProvider } from './contexts/AuthContext';
 import { useTelegram } from './hooks/useTelegram';
 import LoadingScreen from './components/LoadingScreen';
@@ -51,6 +51,56 @@ function App() {
   });
   const [testResults, setTestResults] = useState([]);
 
+  const addTestResult = useCallback((title, status, data = null) => {
+    const result = {
+      id: Date.now(),
+      title,
+      status,
+      data,
+      timestamp: new Date().toLocaleTimeString()
+    };
+    setTestResults(prev => [result, ...prev]);
+  }, []);
+
+  const handleAuth = useCallback(async () => {
+    try {
+      if (!user || !tg) {
+        throw new Error('Telegram данные недоступны');
+      }
+      const initData = tg.initData;
+      if (!initData) {
+        throw new Error('initData недоступны');
+      }
+      addTestResult('Попытка авторизации...', 'info');
+      const response = await api.auth.telegram(initData);
+      if (response.success) {
+        setAuthState({
+          isAuthenticated: true,
+          user: response.user,
+          token: response.token,
+          error: null
+        });
+        localStorage.setItem('paydaily_token', response.token);
+        localStorage.setItem('paydaily_user', JSON.stringify(response.user));
+        addTestResult('Авторизация успешна', 'success', {
+          userId: response.user.id,
+          balance: response.user.balance,
+          vipLevel: response.user.vipLevel
+        });
+        hapticFeedback('notification', 'success');
+      } else {
+        throw new Error(response.message || 'Ошибка авторизации');
+      }
+    } catch (error) {
+      console.error('Ошибка авторизации:', error);
+      addTestResult('Ошибка авторизации', 'error', error.message);
+      setAuthState(prev => ({
+        ...prev,
+        error: error.message
+      }));
+    }
+  }, [user, tg, addTestResult, hapticFeedback]);
+
   // Инициализация приложения
   useEffect(() => {
     const initApp = async () => {
@@ -91,65 +141,6 @@ function App() {
 
     initApp();
   }, [isReady, user, tg, handleAuth]);
-
-  const addTestResult = (title, status, data = null) => {
-    const result = {
-      id: Date.now(),
-      title,
-      status,
-      data,
-      timestamp: new Date().toLocaleTimeString()
-    };
-    setTestResults(prev => [result, ...prev]);
-  };
-
-  const handleAuth = async () => {
-    try {
-      if (!user || !tg) {
-        throw new Error('Telegram данные недоступны');
-      }
-
-      // Получаем initData для авторизации
-      const initData = tg.initData;
-      if (!initData) {
-        throw new Error('initData недоступны');
-      }
-
-      addTestResult('Попытка авторизации...', 'info');
-
-      const response = await api.auth.telegram(initData);
-      
-      if (response.success) {
-        setAuthState({
-          isAuthenticated: true,
-          user: response.user,
-          token: response.token,
-          error: null
-        });
-
-        // Сохраняем токен
-        localStorage.setItem('paydaily_token', response.token);
-        localStorage.setItem('paydaily_user', JSON.stringify(response.user));
-        
-        addTestResult('Авторизация успешна', 'success', {
-          userId: response.user.id,
-          balance: response.user.balance,
-          vipLevel: response.user.vipLevel
-        });
-
-        hapticFeedback('notification', 'success');
-      } else {
-        throw new Error(response.message || 'Ошибка авторизации');
-      }
-    } catch (error) {
-      console.error('Ошибка авторизации:', error);
-      addTestResult('Ошибка авторизации', 'error', error.message);
-      setAuthState(prev => ({
-        ...prev,
-        error: error.message
-      }));
-    }
-  };
 
   const testBackendConnection = async () => {
     try {
