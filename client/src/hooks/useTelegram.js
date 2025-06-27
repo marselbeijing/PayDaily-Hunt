@@ -38,13 +38,13 @@ export function useTelegram() {
 
   const hideMainButton = () => tg?.MainButton?.hide && tg.MainButton.hide();
 
-  const showAlert = (msg) => tg?.showAlert && tg.showAlert(msg);
+  const showAlert = tg ? tg.showAlert.bind(tg) : () => {};
 
   const showConfirm = (message, callback) => {
     tg?.showConfirm(message, callback);
   };
 
-  const hapticFeedback = (type, intensity) => tg?.HapticFeedback?.impactOccurred && tg.HapticFeedback.impactOccurred(type, intensity);
+  const hapticFeedback = tg ? tg.HapticFeedback?.impactOccurred?.bind(tg.HapticFeedback) : () => {};
 
   const openLink = (url) => {
     tg?.openLink(url);

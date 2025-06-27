@@ -253,6 +253,15 @@ function App() {
     return <LoadingScreen />;
   }
 
+  if (!tg) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        <h2 className="text-xl font-bold mb-4">Откройте приложение через Telegram</h2>
+        <p className="text-gray-600">Данное приложение работает только как Telegram Mini App.</p>
+      </div>
+    );
+  }
+
   return (
     <AuthProvider>
       <Router>
