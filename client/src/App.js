@@ -37,7 +37,6 @@ function App() {
     queryId, 
     isReady, 
     showAlert, 
-    showConfirm, 
     hapticFeedback,
     showMainButton,
     hideMainButton 
@@ -91,7 +90,7 @@ function App() {
     };
 
     initApp();
-  }, [isReady, user, tg]);
+  }, [isReady, user, tg, handleAuth]);
 
   const addTestResult = (title, status, data = null) => {
     const result = {
