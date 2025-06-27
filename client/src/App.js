@@ -140,7 +140,7 @@ function App() {
     };
 
     initApp();
-  }, [isReady, user, tg, handleAuth]);
+  }, [isReady, user, tg, handleAuth, addTestResult]);
 
   const testBackendConnection = async () => {
     try {
