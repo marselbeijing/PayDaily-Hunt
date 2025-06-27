@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
 
-const tg = window.Telegram?.WebApp;
-
 export function useTelegram() {
+  const [tg, setTg] = useState(null);
+  const [user, setUser] = useState(null);
+  const [queryId, setQueryId] = useState(null);
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    if (tg) {
-      tg.ready();
+    if (window.Telegram && window.Telegram.WebApp) {
+      const webApp = window.Telegram.WebApp;
+      setTg(webApp);
+      setUser(webApp.initDataUnsafe?.user || null);
+      setQueryId(webApp.initDataUnsafe?.query_id || null);
       setIsReady(true);
     }
   }, []);
@@ -25,37 +29,22 @@ export function useTelegram() {
   };
 
   const showMainButton = (text, onClick) => {
-    tg?.MainButton.setParams({
-      text: text,
-      is_active: true,
-      is_visible: true
-    });
-    tg?.MainButton.onClick(onClick);
+    if (tg?.MainButton) {
+      tg.MainButton.setText(text);
+      tg.MainButton.show();
+      if (onClick) tg.MainButton.onClick(onClick);
+    }
   };
 
-  const hideMainButton = () => {
-    tg?.MainButton.hide();
-  };
+  const hideMainButton = () => tg?.MainButton?.hide && tg.MainButton.hide();
 
-  const showAlert = (message) => {
-    tg?.showAlert(message);
-  };
+  const showAlert = (msg) => tg?.showAlert && tg.showAlert(msg);
 
   const showConfirm = (message, callback) => {
     tg?.showConfirm(message, callback);
   };
 
-  const hapticFeedback = (type = 'impact', style = 'medium') => {
-    if (tg?.HapticFeedback) {
-      if (type === 'impact') {
-        tg.HapticFeedback.impactOccurred(style);
-      } else if (type === 'notification') {
-        tg.HapticFeedback.notificationOccurred(style);
-      } else if (type === 'selection') {
-        tg.HapticFeedback.selectionChanged();
-      }
-    }
-  };
+  const hapticFeedback = (type, intensity) => tg?.HapticFeedback?.impactOccurred && tg.HapticFeedback.impactOccurred(type, intensity);
 
   const openLink = (url) => {
     tg?.openLink(url);
@@ -86,8 +75,8 @@ export function useTelegram() {
 
   return {
     tg,
-    user: tg?.initDataUnsafe?.user,
-    queryId: tg?.initDataUnsafe?.query_id,
+    user,
+    queryId,
     colorScheme: tg?.colorScheme,
     themeParams: tg?.themeParams,
     isExpanded: tg?.isExpanded,

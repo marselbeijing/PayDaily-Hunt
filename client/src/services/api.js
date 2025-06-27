@@ -1,151 +1,32 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 
-  (process.env.NODE_ENV === 'production' 
-    ? 'https://paydaily-hunt-backend.onrender.com/api' 
-    : 'http://localhost:5000/api');
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-class ApiService {
-  constructor() {
-    this.axios = axios.create({
-      baseURL: API_BASE_URL,
-      timeout: 10000,
-      headers: {
-        'Content-Type': 'application/json',
-        'ngrok-skip-browser-warning': 'true'
-      }
-    });
-
-    // Интерцептор для добавления токена
-    this.axios.interceptors.request.use((config) => {
-      const token = localStorage.getItem('paydaily_token');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-      return config;
-    });
-
-    // Интерцептор для обработки ошибок
-    this.axios.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        if (error.response?.status === 401) {
-          // Токен истек, удаляем его
-          localStorage.removeItem('paydaily_token');
-          localStorage.removeItem('paydaily_user');
-          window.location.reload();
-        }
-        return Promise.reject(error);
-      }
-    );
+export const api = {
+  auth: {
+    telegram: (initData) => axios.post(`${API_URL}/auth/telegram`, { initData }).then(r => r.data),
+    checkin: () => axios.post(`${API_URL}/auth/checkin`).then(r => r.data),
+    profile: () => axios.get(`${API_URL}/auth/profile`).then(r => r.data),
+  },
+  tasks: {
+    list: () => axios.get(`${API_URL}/tasks`).then(r => r.data),
+    detail: (id) => axios.get(`${API_URL}/tasks/${id}`).then(r => r.data),
+    start: (id) => axios.post(`${API_URL}/tasks/${id}/start`).then(r => r.data),
+    complete: (id, data) => axios.post(`${API_URL}/tasks/${id}/complete`, data).then(r => r.data),
+    history: () => axios.get(`${API_URL}/tasks/history`).then(r => r.data),
+  },
+  users: {
+    leaderboard: () => axios.get(`${API_URL}/users/leaderboard`).then(r => r.data),
+    referrals: () => axios.get(`${API_URL}/users/referrals`).then(r => r.data),
+    stats: () => axios.get(`${API_URL}/users/stats`).then(r => r.data),
+    achievements: () => axios.get(`${API_URL}/users/achievements`).then(r => r.data),
+  },
+  payments: {
+    withdraw: (data) => axios.post(`${API_URL}/payments/withdraw`, data).then(r => r.data),
+    history: () => axios.get(`${API_URL}/payments/history`).then(r => r.data),
+    validate: (address) => axios.post(`${API_URL}/payments/validate`, { address }).then(r => r.data),
   }
-
-  setAuthToken(token) {
-    if (token) {
-      this.axios.defaults.headers.Authorization = `Bearer ${token}`;
-    } else {
-      delete this.axios.defaults.headers.Authorization;
-    }
-  }
-
-  removeAuthToken() {
-    delete this.axios.defaults.headers.Authorization;
-  }
-
-  // Методы для работы с API
-  async get(endpoint) {
-    const response = await this.axios.get(endpoint);
-    return response.data;
-  }
-
-  async post(endpoint, data = {}) {
-    const response = await this.axios.post(endpoint, data);
-    return response.data;
-  }
-
-  async put(endpoint, data = {}) {
-    const response = await this.axios.put(endpoint, data);
-    return response.data;
-  }
-
-  async delete(endpoint) {
-    const response = await this.axios.delete(endpoint);
-    return response.data;
-  }
-
-  // Auth endpoints
-  auth = {
-    telegram: (initData, referralCode) => 
-      this.post('/auth/telegram', { initData, referralCode }),
-    checkin: () => 
-      this.post('/auth/checkin'),
-    me: () => 
-      this.get('/auth/me'),
-    updateProfile: (data) => 
-      this.put('/auth/profile', data),
-    verifyToken: () => 
-      this.post('/auth/verify-token'),
-    refreshToken: () => 
-      this.post('/auth/refresh-token')
-  };
-
-  // Tasks endpoints
-  tasks = {
-    getAll: (params = {}) => 
-      this.get(`/tasks?${new URLSearchParams(params)}`),
-    getById: (id) => 
-      this.get(`/tasks/${id}`),
-    start: (id) => 
-      this.post(`/tasks/${id}/start`),
-    complete: (id, data) => 
-      this.post(`/tasks/${id}/complete`, data),
-    getHistory: (params = {}) => 
-      this.get(`/tasks/my/history?${new URLSearchParams(params)}`),
-    getFeatured: () => 
-      this.get('/tasks/featured'),
-    getCategories: () => 
-      this.get('/tasks/categories')
-  };
-
-  // Users endpoints
-  users = {
-    getProfile: (id) => 
-      this.get(`/users/${id}`),
-    getLeaderboard: (params = {}) => 
-      this.get(`/users/leaderboard?${new URLSearchParams(params)}`),
-    getReferrals: () => 
-      this.get('/users/referrals'),
-    getStats: () => 
-      this.get('/users/stats'),
-    updateSettings: (data) => 
-      this.put('/users/settings', data)
-  };
-
-  // Payments endpoints
-  payments = {
-    withdraw: (data) => 
-      this.post('/payments/withdraw', data),
-    getHistory: (params = {}) => 
-      this.get(`/payments/history?${new URLSearchParams(params)}`),
-    getMethods: () => 
-      this.get('/payments/methods'),
-    validateAddress: (address, network) => 
-      this.post('/payments/validate-address', { address, network })
-  };
-
-  // Partners endpoints
-  partners = {
-    getOffers: (network) => 
-      this.get(`/partners/${network}/offers`),
-    syncOffers: (network) => 
-      this.post(`/partners/${network}/sync`),
-    callback: (network, data) => 
-      this.post(`/partners/${network}/callback`, data)
-  };
-}
-
-// Создаем единственный экземпляр
-export const api = new ApiService();
+};
 
 // Утилиты для форматирования
 export const formatBalance = (balance) => {

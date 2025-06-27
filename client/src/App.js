@@ -3,6 +3,14 @@ import { AuthProvider } from './contexts/AuthContext';
 import { useTelegram } from './hooks/useTelegram';
 import LoadingScreen from './components/LoadingScreen';
 import { api } from './services/api';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Tasks from './pages/Tasks';
+import Profile from './pages/Profile';
+import Navigation from './components/Navigation';
+import TaskDetail from './pages/TaskDetail';
+import Wallet from './pages/Wallet';
+import Leaderboard from './pages/Leaderboard';
 
 // Простые тестовые компоненты
 const TestButton = ({ children, onClick, className = "", disabled = false }) => (
@@ -247,125 +255,19 @@ function App() {
 
   return (
     <AuthProvider>
-      <div className="min-h-screen bg-tg-bg safe-area-top safe-area-bottom">
-        <div className="container mx-auto p-4 max-w-md">
-          {/* Заголовок */}
-          <div className="text-center mb-6">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center">
-              <span className="text-2xl">💰</span>
-            </div>
-            <h1 className="text-2xl font-bold mb-2">PayDaily Hunt</h1>
-            <p className="text-tg-hint">Тестовая версия</p>
-          </div>
-
-          {/* Информация о пользователе */}
-          {user && (
-            <InfoCard title="Telegram Пользователь">
-              <div className="space-y-2 text-sm">
-                <div>ID: <span className="font-mono">{user.id}</span></div>
-                <div>Имя: {user.first_name} {user.last_name}</div>
-                {user.username && <div>Username: @{user.username}</div>}
-                <div>Язык: {user.language_code || 'не указан'}</div>
-              </div>
-            </InfoCard>
-          )}
-
-          {/* Статус авторизации */}
-          <InfoCard title="Статус авторизации">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span>Статус:</span>
-                <StatusBadge 
-                  status={authState.isAuthenticated ? 'success' : 'error'} 
-                  text={authState.isAuthenticated ? 'Авторизован' : 'Не авторизован'} 
-                />
-              </div>
-              {authState.user && (
-                <>
-                  <div className="flex items-center justify-between">
-                    <span>Баланс:</span>
-                    <span className="font-bold">{authState.user.balance} точек</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span>VIP уровень:</span>
-                    <StatusBadge 
-                      status="info" 
-                      text={authState.user.vipLevel || 'none'} 
-                    />
-                  </div>
-                </>
-              )}
-              {authState.error && (
-                <div className="text-red-500 text-sm mt-2">
-                  Ошибка: {authState.error}
-                </div>
-              )}
-            </div>
-          </InfoCard>
-
-          {/* Кнопки тестирования */}
-          <div className="space-y-3 mb-6">
-            <TestButton onClick={testBackendConnection}>
-              🔗 Тест соединения с Backend
-            </TestButton>
-            
-            <TestButton onClick={testTelegramFeatures} disabled={!tg}>
-              📱 Тест функций Telegram
-            </TestButton>
-            
-            <TestButton onClick={handleAuth} disabled={!user}>
-              🔐 Повторная авторизация
-            </TestButton>
-            
-            <TestButton 
-              onClick={testCheckin} 
-              disabled={!authState.isAuthenticated}
-            >
-              ✅ Тест ежедневного чекина
-            </TestButton>
-          </div>
-
-          {/* Результаты тестов */}
-          <InfoCard title="Результаты тестов">
-            <div className="max-h-96 overflow-y-auto space-y-2">
-              {testResults.length === 0 ? (
-                <p className="text-tg-hint text-sm">Результаты тестов будут отображаться здесь</p>
-              ) : (
-                testResults.map(result => (
-                  <div key={result.id} className="border-b border-gray-200 dark:border-gray-700 pb-2 last:border-b-0">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium">{result.title}</span>
-                      <div className="flex items-center space-x-2">
-                        <StatusBadge status={result.status} text={result.status} />
-                        <span className="text-xs text-tg-hint">{result.timestamp}</span>
-                      </div>
-                    </div>
-                    {result.data && (
-                      <div className="text-xs text-tg-hint bg-tg-secondary p-2 rounded">
-                        <pre className="whitespace-pre-wrap">
-                          {typeof result.data === 'string' ? result.data : JSON.stringify(result.data, null, 2)}
-                        </pre>
-                      </div>
-                    )}
-                  </div>
-                ))
-              )}
-            </div>
-          </InfoCard>
-
-          {/* Техническая информация */}
-          <InfoCard title="Техническая информация">
-            <div className="space-y-1 text-xs text-tg-hint">
-              <div>WebApp готов: {isReady ? '✅' : '❌'}</div>
-              <div>Query ID: {queryId ? '✅' : '❌'}</div>
-              <div>Тема: {tg?.colorScheme || 'неизвестно'}</div>
-              <div>Платформа: {tg?.platform || 'неизвестно'}</div>
-              <div>Версия: {tg?.version || 'неизвестно'}</div>
-              <div>Viewport: {tg?.viewportHeight || 'неизвестно'}px</div>
-            </div>
-          </InfoCard>
+      <Router>
+        <div className="min-h-screen bg-tg-bg safe-area-top safe-area-bottom pb-16">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/tasks" element={<Tasks />} />
+            <Route path="/tasks/:id" element={<TaskDetail />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/wallet" element={<Wallet />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
+          </Routes>
+          <Navigation />
         </div>
-      </div>
+      </Router>
     </AuthProvider>
   );
 }
