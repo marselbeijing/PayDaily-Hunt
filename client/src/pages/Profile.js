@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../contexts/AuthContext';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
 
 export default function Profile() {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const [profile, setProfile] = useState(null);
   const [referrals, setReferrals] = useState([]);
   const [loading, setLoading] = useState(true);

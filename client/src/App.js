@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { AuthProvider } from './contexts/AuthContext';
 import { useTelegram } from './hooks/useTelegram';
 import LoadingScreen from './components/LoadingScreen';
 import { api } from './services/api';
@@ -11,6 +10,7 @@ import Navigation from './components/Navigation';
 import TaskDetail from './pages/TaskDetail';
 import Wallet from './pages/Wallet';
 import Leaderboard from './pages/Leaderboard';
+import { useAuth } from './contexts/AuthContext';
 
 // Простые тестовые компоненты
 const TestButton = ({ children, onClick, className = "", disabled = false }) => (
