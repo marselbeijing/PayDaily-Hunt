@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: paydaily-hunt-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        fromDatabase:
+          name: paydaily-hunt-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: FRONTEND_URL
+        value: https://paydaily-hunt.vercel.app
+
+databases:
+  - name: paydaily-hunt-db
+    databaseName: paydaily_hunt
+    user: paydaily_user 

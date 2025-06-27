@@ -60,6 +60,16 @@ app.get('/', (req, res) => {
     });
 });
 
+// Health check endpoint для Render
+app.get('/api/health', (req, res) => {
+    res.status(200).json({
+        status: 'OK',
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString(),
+        database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+    });
+});
+
 // Обработка 404
 app.use('*', (req, res) => {
     res.status(404).json({ error: 'Маршрут не найден' });
