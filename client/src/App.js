@@ -10,7 +10,7 @@ import Navigation from './components/Navigation';
 import TaskDetail from './pages/TaskDetail';
 import Wallet from './pages/Wallet';
 import Leaderboard from './pages/Leaderboard';
-import { useAuth } from './contexts/AuthContext';
+import { AuthProvider } from './contexts/AuthContext';
 
 // Простые тестовые компоненты
 const TestButton = ({ children, onClick, className = "", disabled = false }) => (
