@@ -90,6 +90,47 @@ router.get('/', auth, async (req, res) => {
     }
 });
 
+// Получить историю выполненных заданий
+router.get('/user/history', auth, async (req, res) => {
+    try {
+        const { status, page = 1, limit = 20 } = req.query;
+        const user = req.user;
+        
+        const filter = { user: user._id };
+        if (status) filter.status = status;
+        
+        const skip = (page - 1) * limit;
+        
+        const completions = await TaskCompletion.find(filter)
+            .populate('task', 'title type reward imageUrl')
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(Number(limit));
+        
+        res.json({
+            success: true,
+            completions: completions.map(c => ({
+                id: c._id,
+                task: c.task,
+                status: c.status,
+                rewardAmount: c.rewardAmount,
+                startedAt: c.startedAt,
+                completedAt: c.completedAt,
+                timeSpent: c.metadata?.timeSpent
+            })),
+            pagination: {
+                page: Number(page),
+                limit: Number(limit),
+                hasMore: completions.length === Number(limit)
+            }
+        });
+        
+    } catch (error) {
+        console.error('Ошибка получения истории:', error);
+        res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+    }
+});
+
 // Получить детали задания
 router.get('/:taskId', auth, async (req, res) => {
     try {
@@ -252,47 +293,6 @@ router.post('/:taskId/submit', auth, async (req, res) => {
         
     } catch (error) {
         console.error('Ошибка отправки задания:', error);
-        res.status(500).json({ error: 'Внутренняя ошибка сервера' });
-    }
-});
-
-// Получить историю выполненных заданий
-router.get('/user/history', auth, async (req, res) => {
-    try {
-        const { status, page = 1, limit = 20 } = req.query;
-        const user = req.user;
-        
-        const filter = { user: user._id };
-        if (status) filter.status = status;
-        
-        const skip = (page - 1) * limit;
-        
-        const completions = await TaskCompletion.find(filter)
-            .populate('task', 'title type reward imageUrl')
-            .sort({ createdAt: -1 })
-            .skip(skip)
-            .limit(Number(limit));
-        
-        res.json({
-            success: true,
-            completions: completions.map(c => ({
-                id: c._id,
-                task: c.task,
-                status: c.status,
-                rewardAmount: c.rewardAmount,
-                startedAt: c.startedAt,
-                completedAt: c.completedAt,
-                timeSpent: c.metadata?.timeSpent
-            })),
-            pagination: {
-                page: Number(page),
-                limit: Number(limit),
-                hasMore: completions.length === Number(limit)
-            }
-        });
-        
-    } catch (error) {
-        console.error('Ошибка получения истории:', error);
         res.status(500).json({ error: 'Внутренняя ошибка сервера' });
     }
 });
