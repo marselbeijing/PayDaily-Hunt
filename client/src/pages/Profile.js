@@ -3,14 +3,14 @@ import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
 
 export default function Profile({ onNavigate }) {
-  const { user, logout, loading, token } = useAuth();
+  const { user, logout, loading: authLoading, token } = useAuth();
   const [profile, setProfile] = useState(null);
   const [referrals, setReferrals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (loading || !token) return;
+    if (authLoading || !token) return;
     Promise.all([
       api.auth.profile(),
       api.users.referrals()
@@ -24,7 +24,7 @@ export default function Profile({ onNavigate }) {
         setError('Error loading profile');
         setLoading(false);
       });
-  }, [loading, token]);
+  }, [authLoading, token]);
 
   if (loading) return <div className="p-4">Loading profile...</div>;
   if (error) return <div className="p-4 text-red-500">{error}</div>;

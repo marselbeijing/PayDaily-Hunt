@@ -3,23 +3,23 @@ import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
 
 export default function Home({ onNavigate }) {
-  const { user, loading, token } = useAuth();
+  const { user, loading: authLoading, token } = useAuth();
   const [history, setHistory] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [historyLoading, setHistoryLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (loading || !token) return;
+    if (authLoading || !token) return;
     api.tasks.history()
       .then(data => {
         setHistory(data.history || []);
-        setLoading(false);
+        setHistoryLoading(false);
       })
       .catch(() => {
         setError('Error loading reward history');
-        setLoading(false);
+        setHistoryLoading(false);
       });
-  }, [loading, token]);
+  }, [authLoading, token]);
 
   return (
     <div className="p-4 pt-2 pb-20">
@@ -36,7 +36,7 @@ export default function Home({ onNavigate }) {
         Complete daily tasks and earn real cryptocurrency rewards!
       </div>
       <div className="mb-2 font-bold">Reward History</div>
-      {loading ? (
+      {historyLoading ? (
         <div>Loading...</div>
       ) : error ? (
         <div className="text-red-500">{error}</div>
