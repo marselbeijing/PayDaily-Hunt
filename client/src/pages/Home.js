@@ -3,12 +3,13 @@ import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
 
 export default function Home({ onNavigate }) {
-  const { user } = useAuth();
+  const { user, loading, token } = useAuth();
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (loading || !token) return;
     api.tasks.history()
       .then(data => {
         setHistory(data.history || []);
@@ -18,7 +19,7 @@ export default function Home({ onNavigate }) {
         setError('Error loading reward history');
         setLoading(false);
       });
-  }, []);
+  }, [loading, token]);
 
   return (
     <div className="p-4 pt-2 pb-20">

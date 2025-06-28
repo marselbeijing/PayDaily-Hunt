@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../services/api';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Tasks({ onNavigate }) {
+  const { loading, token } = useAuth();
   const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingTasks, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (loading || !token) return;
     api.tasks.list()
       .then(data => {
         setTasks(data.tasks || []);
@@ -16,9 +19,9 @@ export default function Tasks({ onNavigate }) {
         setError('Error loading tasks');
         setLoading(false);
       });
-  }, []);
+  }, [loading, token]);
 
-  if (loading) return <div className="p-4">Loading tasks...</div>;
+  if (loadingTasks) return <div className="p-4">Loading tasks...</div>;
   if (error) return <div className="p-4 text-red-500">{error}</div>;
 
   return (

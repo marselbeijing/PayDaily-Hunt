@@ -59,9 +59,25 @@ export const AuthProvider = ({ children }) => {
 
       console.log('Auth init:', { isReady, telegramUser, tg, initData: tg?.initData });
 
+      // Явно получаем initData
+      const initData = tg?.initData || tg?.initDataUnsafe || window.Telegram?.WebApp?.initData || '';
       const token = localStorage.getItem('paydaily_token');
       const userData = localStorage.getItem('paydaily_user');
 
+      // Если есть initData — всегда вызываем login(initData), даже если есть токен (он может быть невалиден)
+      if (initData) {
+        try {
+          console.log('Calling login with initData:', initData);
+          await login(initData);
+          console.log('login(initData) completed');
+        } catch (error) {
+          console.error('Auto-authorization error:', error);
+          dispatch({ type: 'SET_LOADING', payload: false });
+        }
+        return;
+      }
+
+      // Если нет initData, пробуем восстановить сессии из localStorage
       if (token && userData) {
         try {
           const user = JSON.parse(userData);
@@ -79,23 +95,8 @@ export const AuthProvider = ({ children }) => {
         }
       }
 
-      // Явно логируем initData
-      const initData = tg?.initData || tg?.initDataUnsafe || window.Telegram?.WebApp?.initData || '';
-      console.log('initData for login:', initData);
-
-      if (initData) {
-        try {
-          console.log('Calling login with initData:', initData);
-          await login(initData);
-          console.log('login(initData) completed');
-        } catch (error) {
-          console.error('Auto-authorization error:', error);
-          dispatch({ type: 'SET_LOADING', payload: false });
-        }
-      } else {
-        console.log('No initData, setting loading false');
-        dispatch({ type: 'SET_LOADING', payload: false });
-      }
+      // Если ничего не получилось — loading=false
+      dispatch({ type: 'SET_LOADING', payload: false });
     };
 
     initAuth();
@@ -267,8 +268,10 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
+  if (!context) throw new Error('useAuth must be used within AuthProvider');
+  return {
+    ...context,
+    loading: context.loading,
+    token: context.token
+  };
 }; 
