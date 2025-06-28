@@ -61,9 +61,6 @@ app.use('/api/tasks', require('./routes/tasks'));
 app.use('/api/partners', require('./routes/partners'));
 app.use('/api/payments', require('./routes/payments'));
 
-// Telegram webhook
-app.use('/webhook', require('./routes/webhook'));
-
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ 
