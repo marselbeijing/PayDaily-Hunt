@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useTelegram } from './hooks/useTelegram';
 import LoadingScreen from './components/LoadingScreen';
 import { api } from './services/api';
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Tasks from './pages/Tasks';
 import Profile from './pages/Profile';
@@ -20,6 +20,7 @@ function App() {
   } = useTelegram();
   
   const [loading, setLoading] = useState(true);
+  // eslint-disable-next-line no-unused-vars
   const [authState, setAuthState] = useState({
     isAuthenticated: false,
     user: null,
