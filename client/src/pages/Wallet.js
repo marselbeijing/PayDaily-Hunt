@@ -18,33 +18,33 @@ export default function Wallet({ onNavigate }) {
         setLoading(false);
       })
       .catch(() => {
-        setError('Ошибка загрузки истории выводов');
+        setError('Error loading withdrawal history');
         setLoading(false);
       });
   }, []);
 
   const handleWithdraw = async () => {
     if (!withdrawAmount || !walletAddress) {
-      alert('Заполните все поля');
+      alert('Please fill all fields');
       return;
     }
 
     const amount = parseFloat(withdrawAmount);
     if (amount <= 0 || amount > (user?.balance || 0)) {
-      alert('Некорректная сумма');
+      alert('Invalid amount');
       return;
     }
 
     setWithdrawing(true);
     try {
       await api.payments.withdraw({ amount, walletAddress });
-      alert('Заявка на вывод создана');
+      alert('Withdrawal request created');
       setWithdrawAmount('');
       setWalletAddress('');
       const data = await api.payments.history();
       setWithdrawals(data.withdrawals || []);
     } catch (error) {
-      alert('Ошибка при создании заявки');
+      alert('Error creating withdrawal request');
     } finally {
       setWithdrawing(false);
     }
@@ -52,35 +52,35 @@ export default function Wallet({ onNavigate }) {
 
   return (
     <div className="p-4 pt-2 pb-20">
-      <h1 className="text-2xl font-bold mb-4">Кошелёк</h1>
+      <h1 className="text-2xl font-bold mb-4">Wallet</h1>
       
       <div className="bg-tg-card p-4 rounded-xl shadow mb-6">
-        <div className="text-lg font-bold mb-2">Баланс</div>
+        <div className="text-lg font-bold mb-2">Balance</div>
         <div className="text-3xl font-mono font-bold">{user?.balance ?? 0} <span className="text-base font-normal">USDT</span></div>
       </div>
 
       <div className="bg-tg-card p-4 rounded-xl shadow mb-6">
-        <div className="text-lg font-bold mb-4">Вывод средств</div>
+        <div className="text-lg font-bold mb-4">Withdraw Funds</div>
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">Сумма (USDT)</label>
+          <label className="block text-sm font-medium mb-2">Amount (USDT)</label>
           <input
             type="number"
             value={withdrawAmount}
             onChange={(e) => setWithdrawAmount(e.target.value)}
             className="w-full p-2 border rounded-lg"
-            placeholder="Введите сумму"
+            placeholder="Enter amount"
             min="1"
             max={user?.balance || 0}
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">Адрес кошелька</label>
+          <label className="block text-sm font-medium mb-2">Wallet Address</label>
           <input
             type="text"
             value={walletAddress}
             onChange={(e) => setWalletAddress(e.target.value)}
             className="w-full p-2 border rounded-lg"
-            placeholder="Введите адрес USDT кошелька"
+            placeholder="Enter USDT wallet address"
           />
         </div>
         <button
@@ -88,18 +88,18 @@ export default function Wallet({ onNavigate }) {
           onClick={handleWithdraw}
           disabled={withdrawing}
         >
-          {withdrawing ? 'Обработка...' : 'Создать заявку'}
+          {withdrawing ? 'Processing...' : 'Create Request'}
         </button>
       </div>
 
       <div className="bg-tg-card p-4 rounded-xl shadow">
-        <div className="text-lg font-bold mb-4">История выводов</div>
+        <div className="text-lg font-bold mb-4">Withdrawal History</div>
         {loading ? (
-          <div>Загрузка...</div>
+          <div>Loading...</div>
         ) : error ? (
           <div className="text-red-500">{error}</div>
         ) : withdrawals.length === 0 ? (
-          <div className="text-tg-hint text-sm">Нет заявок на вывод</div>
+          <div className="text-tg-hint text-sm">No withdrawal requests</div>
         ) : (
           <div className="space-y-2">
             {withdrawals.map((withdrawal, idx) => (
@@ -109,7 +109,7 @@ export default function Wallet({ onNavigate }) {
                   <div className="text-xs text-gray-500">{new Date(withdrawal.createdAt).toLocaleDateString()}</div>
                 </div>
                 <div className={`text-sm ${withdrawal.status === 'completed' ? 'text-green-500' : withdrawal.status === 'pending' ? 'text-yellow-500' : 'text-red-500'}`}>
-                  {withdrawal.status === 'completed' ? 'Выполнено' : withdrawal.status === 'pending' ? 'В обработке' : 'Отклонено'}
+                  {withdrawal.status === 'completed' ? 'Completed' : withdrawal.status === 'pending' ? 'Pending' : 'Rejected'}
                 </div>
               </div>
             ))}

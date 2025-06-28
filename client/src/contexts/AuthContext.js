@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
   const { tg, user: telegramUser, isReady } = useTelegram();
 
-  // Восстановление сессии при загрузке
+  // Session recovery on load
   useEffect(() => {
     const initAuth = async () => {
       if (!isReady) return;
@@ -72,20 +72,20 @@ export const AuthProvider = ({ children }) => {
           });
           return;
         } catch (error) {
-          console.error('Ошибка восстановления сессии:', error);
+          console.error('Session recovery error:', error);
           localStorage.removeItem('paydaily_token');
           localStorage.removeItem('paydaily_user');
         }
       }
 
-      // Если нет сохраненной сессии, пробуем авторизоваться через Telegram
+      // If no saved session, try to authorize via Telegram
       if (telegramUser && tg) {
         try {
           const initData = tg.initData || '';
           console.log('Attempting Telegram auth with initData:', initData);
           await login(initData);
         } catch (error) {
-          console.error('Ошибка автоавторизации:', error);
+          console.error('Auto-authorization error:', error);
           dispatch({ type: 'SET_LOADING', payload: false });
         }
       } else {
@@ -97,7 +97,7 @@ export const AuthProvider = ({ children }) => {
     initAuth();
   }, [isReady, telegramUser, tg]);
 
-  // Авторизация через Telegram
+  // Authorization via Telegram
   const login = async (initData, referralCode = null) => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
@@ -109,11 +109,11 @@ export const AuthProvider = ({ children }) => {
 
       const { token, user } = response;
 
-      // Сохраняем в localStorage
+      // Save to localStorage
       localStorage.setItem('paydaily_token', token);
       localStorage.setItem('paydaily_user', JSON.stringify(user));
 
-      // Устанавливаем токен для API
+      // Set token for API
       api.setAuthToken(token);
 
       dispatch({
@@ -121,17 +121,17 @@ export const AuthProvider = ({ children }) => {
         payload: { user, token }
       });
 
-      // Показываем приветствие для новых пользователей
+      // Show welcome message for new users
       if (user.isNewUser) {
-        toast.success(`Добро пожаловать, ${user.firstName}! 🎉`);
+        toast.success(`Welcome, ${user.firstName}! 🎉`);
       } else {
-        toast.success('Добро пожаловать снова! 👋');
+        toast.success('Welcome back! 👋');
       }
 
       return { success: true, user, token };
     } catch (error) {
-      console.error('Ошибка авторизации:', error);
-      const errorMessage = error.response?.data?.error || error.message || 'Ошибка авторизации';
+      console.error('Authorization error:', error);
+      const errorMessage = error.response?.data?.error || error.message || 'Authorization error';
       
       dispatch({
         type: 'SET_ERROR',
@@ -143,45 +143,45 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Выход из системы
+  // Logout
   const logout = () => {
     localStorage.removeItem('paydaily_token');
     localStorage.removeItem('paydaily_user');
     api.removeAuthToken();
     dispatch({ type: 'LOGOUT' });
-    toast.success('Вы вышли из системы');
+    toast.success('You have been logged out');
   };
 
-  // Обновление данных пользователя
+  // Update user data
   const updateUser = (userData) => {
     dispatch({
       type: 'UPDATE_USER',
       payload: userData
     });
 
-    // Обновляем localStorage
+    // Update localStorage
     const updatedUser = { ...state.user, ...userData };
     localStorage.setItem('paydaily_user', JSON.stringify(updatedUser));
   };
 
-  // Ежедневный чек-ин
+  // Daily check-in
   const performCheckIn = async () => {
     try {
       const response = await api.post('/auth/checkin');
       const { bonus, streak, newBalance, levelChanged, newLevel, message } = response.data;
 
-      // Обновляем пользователя
+      // Update user
       updateUser({
         balance: newBalance,
         checkInStreak: streak,
         vipLevel: levelChanged ? newLevel : state.user.vipLevel
       });
 
-      // Показываем уведомления
+      // Show notifications
       toast.success(message);
 
       if (levelChanged) {
-        toast.success(`🎉 Поздравляем! Новый VIP уровень: ${newLevel.toUpperCase()}!`, {
+        toast.success(`🎉 Congratulations! New VIP level: ${newLevel.toUpperCase()}!`, {
           duration: 5000
         });
       }
@@ -195,49 +195,49 @@ export const AuthProvider = ({ children }) => {
         newLevel
       };
     } catch (error) {
-      console.error('Ошибка чек-ина:', error);
-      const errorMessage = error.response?.data?.error || 'Ошибка чек-ина';
+      console.error('Check-in error:', error);
+      const errorMessage = error.response?.data?.error || 'Check-in error';
       toast.error(errorMessage);
       return { success: false, error: errorMessage };
     }
   };
 
-  // Обновление профиля
+  // Update profile
   const updateProfile = async (profileData) => {
     try {
       const response = await api.put('/auth/profile', profileData);
       
       updateUser(response.data.user);
-      toast.success('Профиль успешно обновлен');
+      toast.success('Profile successfully updated');
       
       return { success: true };
     } catch (error) {
-      console.error('Ошибка обновления профиля:', error);
-      const errorMessage = error.response?.data?.error || 'Ошибка обновления профиля';
+      console.error('Profile update error:', error);
+      const errorMessage = error.response?.data?.error || 'Profile update error';
       toast.error(errorMessage);
       return { success: false, error: errorMessage };
     }
   };
 
-  // Получение актуальных данных пользователя
+  // Get actual user data
   const refreshUser = async () => {
     try {
       const response = await api.get('/auth/profile');
       updateUser(response.user);
       return { success: true };
     } catch (error) {
-      console.error('Ошибка обновления данных:', error);
+      console.error('Data update error:', error);
       return { success: false };
     }
   };
 
-  // Проверка токена
+  // Token verification
   const verifyToken = async () => {
     try {
       const response = await api.get('/auth/profile');
       return { success: true, user: response.user };
     } catch (error) {
-      console.error('Токен недействителен:', error);
+      console.error('Token invalid:', error);
       logout();
       return { success: false };
     }

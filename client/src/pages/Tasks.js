@@ -13,20 +13,20 @@ export default function Tasks({ onNavigate }) {
         setLoading(false);
       })
       .catch(err => {
-        setError('Ошибка загрузки заданий');
+        setError('Error loading tasks');
         setLoading(false);
       });
   }, []);
 
-  if (loading) return <div className="p-4">Загрузка заданий...</div>;
+  if (loading) return <div className="p-4">Loading tasks...</div>;
   if (error) return <div className="p-4 text-red-500">{error}</div>;
 
   return (
     <div className="p-4 pt-2 pb-20">
-      <h1 className="text-2xl font-bold mb-4">Задания</h1>
+      <h1 className="text-2xl font-bold mb-4">Tasks</h1>
       {tasks.length === 0 ? (
         <div className="bg-tg-card p-4 rounded-xl shadow text-tg-hint text-sm">
-          Нет доступных заданий.
+          No available tasks.
         </div>
       ) : (
         <div className="space-y-4">
@@ -35,8 +35,8 @@ export default function Tasks({ onNavigate }) {
               <div className="font-bold text-lg mb-1">{task.title}</div>
               <div className="text-tg-hint text-sm mb-2">{task.description}</div>
               <div className="flex items-center justify-between">
-                <span className="text-xs text-tg-hint">Награда: <b>{task.reward} USDT</b></span>
-                <button className="btn btn-primary btn-sm" onClick={() => onNavigate('task-detail', { taskId: task._id })}>Выполнить</button>
+                <span className="text-xs text-tg-hint">Reward: <b>{task.reward} USDT</b></span>
+                <button className="btn btn-primary btn-sm" onClick={() => onNavigate('task-detail', { taskId: task._id })}>Complete</button>
               </div>
             </div>
           ))}

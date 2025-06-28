@@ -1,11 +1,11 @@
 import React from 'react';
 
 const navItems = [
-  { label: 'Главная', page: 'home', icon: '🏠' },
-  { label: 'Задания', page: 'tasks', icon: '📝' },
-  { label: 'Профиль', page: 'profile', icon: '👤' },
-  { label: 'Кошелёк', page: 'wallet', icon: '💳' },
-  { label: 'Лидерборд', page: 'leaderboard', icon: '🏆' },
+  { label: 'Home', page: 'home', icon: '🏠' },
+  { label: 'Tasks', page: 'tasks', icon: '📝' },
+  { label: 'Profile', page: 'profile', icon: '👤' },
+  { label: 'Wallet', page: 'wallet', icon: '💳' },
+  { label: 'Leaderboard', page: 'leaderboard', icon: '🏆' },
 ];
 
 export default function Navigation({ currentPage, onNavigate }) {

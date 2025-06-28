@@ -17,14 +17,14 @@ function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedTaskId, setSelectedTaskId] = useState(null);
 
-  // Инициализация приложения
+  // App initialization
   useEffect(() => {
     const initApp = async () => {
       try {
-        // Ждем инициализации Telegram WebApp
+        // Wait for Telegram WebApp initialization
         if (!isReady) return;
 
-        // Настраиваем тему
+        // Configure theme
         if (tg) {
           document.documentElement.setAttribute('data-theme', tg.colorScheme || 'light');
           tg.expand();
@@ -33,7 +33,7 @@ function App() {
 
         setLoading(false);
       } catch (error) {
-        console.error('Ошибка инициализации:', error);
+        console.error('Initialization error:', error);
         setLoading(false);
       }
     };
@@ -74,8 +74,8 @@ function App() {
   if (!tg) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-        <h2 className="text-xl font-bold mb-4">Откройте приложение через Telegram</h2>
-        <p className="text-gray-600">Данное приложение работает только как Telegram Mini App.</p>
+        <h2 className="text-xl font-bold mb-4">Open app through Telegram</h2>
+        <p className="text-gray-600">This app only works as a Telegram Mini App.</p>
       </div>
     );
   }

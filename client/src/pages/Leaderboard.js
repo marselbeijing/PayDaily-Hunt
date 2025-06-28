@@ -13,21 +13,21 @@ export default function Leaderboard({ onNavigate }) {
         setLoading(false);
       })
       .catch(() => {
-        setError('Ошибка загрузки лидерборда');
+        setError('Error loading leaderboard');
         setLoading(false);
       });
   }, []);
 
-  if (loading) return <div className="p-4">Загрузка лидерборда...</div>;
+  if (loading) return <div className="p-4">Loading leaderboard...</div>;
   if (error) return <div className="p-4 text-red-500">{error}</div>;
 
   return (
     <div className="p-4 pt-2 pb-20">
-      <h1 className="text-2xl font-bold mb-4">Лидерборд</h1>
+      <h1 className="text-2xl font-bold mb-4">Leaderboard</h1>
       
       {leaderboard.length === 0 ? (
         <div className="bg-tg-card p-4 rounded-xl shadow text-tg-hint text-sm">
-          Нет данных для отображения
+          No data to display
         </div>
       ) : (
         <div className="space-y-3">
@@ -44,12 +44,12 @@ export default function Leaderboard({ onNavigate }) {
                 </div>
                 <div>
                   <div className="font-bold">{user.firstName} {user.lastName}</div>
-                  <div className="text-sm text-tg-hint">@{user.username || 'неизвестен'}</div>
+                  <div className="text-sm text-tg-hint">@{user.username || 'unknown'}</div>
                 </div>
               </div>
               <div className="text-right">
                 <div className="font-mono font-bold">{user.balance || 0} USDT</div>
-                <div className="text-xs text-tg-hint">{user.completedTasks || 0} заданий</div>
+                <div className="text-xs text-tg-hint">{user.completedTasks || 0} tasks</div>
               </div>
             </div>
           ))}
