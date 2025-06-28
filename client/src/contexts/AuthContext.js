@@ -57,6 +57,8 @@ export const AuthProvider = ({ children }) => {
     const initAuth = async () => {
       if (!isReady) return;
 
+      console.log('Auth init:', { isReady, telegramUser, initData: tg?.initData });
+
       const token = localStorage.getItem('paydaily_token');
       const userData = localStorage.getItem('paydaily_user');
 
@@ -77,14 +79,17 @@ export const AuthProvider = ({ children }) => {
       }
 
       // Если нет сохраненной сессии, пробуем авторизоваться через Telegram
-      if (telegramUser && tg && tg.initData) {
+      if (telegramUser && tg) {
         try {
-          await login(tg.initData);
+          const initData = tg.initData || '';
+          console.log('Attempting Telegram auth with initData:', initData);
+          await login(initData);
         } catch (error) {
           console.error('Ошибка автоавторизации:', error);
           dispatch({ type: 'SET_LOADING', payload: false });
         }
       } else {
+        console.log('No Telegram user or tg object, setting loading false');
         dispatch({ type: 'SET_LOADING', payload: false });
       }
     };

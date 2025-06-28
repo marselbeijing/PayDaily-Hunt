@@ -35,7 +35,7 @@ export const api = {
   auth: {
     telegram: (initData) => apiClient.post('/auth/telegram', { initData }).then(r => r.data),
     checkin: () => apiClient.post('/auth/checkin').then(r => r.data),
-    profile: () => apiClient.get('/auth/profile').then(r => r.data),
+    profile: () => apiClient.get('/users/profile').then(r => r.data),
   },
   tasks: {
     list: () => apiClient.get('/tasks').then(r => r.data),
@@ -49,9 +49,11 @@ export const api = {
     referrals: () => apiClient.get('/users/referrals').then(r => r.data),
     stats: () => apiClient.get('/users/stats').then(r => r.data),
     achievements: () => apiClient.get('/users/achievements').then(r => r.data),
+    profile: () => apiClient.get('/users/profile').then(r => r.data),
   },
   payments: {
     withdraw: (data) => apiClient.post('/payments/withdraw', data).then(r => r.data),
+    withdrawals: () => apiClient.get('/payments/withdrawals').then(r => r.data),
     history: () => apiClient.get('/payments/history').then(r => r.data),
     validate: (address) => apiClient.post('/payments/validate', { address }).then(r => r.data),
   }

@@ -12,7 +12,7 @@ export default function Wallet({ onNavigate }) {
   const [withdrawing, setWithdrawing] = useState(false);
 
   useEffect(() => {
-    api.payments.withdrawals()
+    api.payments.history()
       .then(data => {
         setWithdrawals(data.withdrawals || []);
         setLoading(false);
@@ -41,7 +41,7 @@ export default function Wallet({ onNavigate }) {
       alert('Заявка на вывод создана');
       setWithdrawAmount('');
       setWalletAddress('');
-      const data = await api.payments.withdrawals();
+      const data = await api.payments.history();
       setWithdrawals(data.withdrawals || []);
     } catch (error) {
       alert('Ошибка при создании заявки');
