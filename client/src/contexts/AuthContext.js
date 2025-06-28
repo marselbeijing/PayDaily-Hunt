@@ -79,17 +79,17 @@ export const AuthProvider = ({ children }) => {
       }
 
       // If no saved session, try to authorize via Telegram
-      if (telegramUser && tg) {
+      const initData = tg?.initData || tg?.initDataUnsafe || window.Telegram?.WebApp?.initData || '';
+      if (initData) {
         try {
-          const initData = tg.initData || '';
-          console.log('Attempting Telegram auth with initData:', initData);
+          console.log('Calling login with initData:', initData);
           await login(initData);
         } catch (error) {
           console.error('Auto-authorization error:', error);
           dispatch({ type: 'SET_LOADING', payload: false });
         }
       } else {
-        console.log('No Telegram user or tg object, setting loading false');
+        console.log('No initData, setting loading false');
         dispatch({ type: 'SET_LOADING', payload: false });
       }
     };
