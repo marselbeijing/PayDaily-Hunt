@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { api } from '../services/api';
+import { useTelegram } from '../hooks/useTelegram';
 import toast from 'react-hot-toast';
 
 const AuthContext = createContext();
@@ -49,30 +50,47 @@ const authReducer = (state, action) => {
 
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
+  const { tg, user: telegramUser, isReady } = useTelegram();
 
   // Восстановление сессии при загрузке
   useEffect(() => {
-    const token = localStorage.getItem('paydaily_token');
-    const userData = localStorage.getItem('paydaily_user');
+    const initAuth = async () => {
+      if (!isReady) return;
 
-    if (token && userData) {
-      try {
-        const user = JSON.parse(userData);
-        api.setAuthToken(token);
-        dispatch({
-          type: 'SET_USER',
-          payload: { user, token }
-        });
-      } catch (error) {
-        console.error('Ошибка восстановления сессии:', error);
-        localStorage.removeItem('paydaily_token');
-        localStorage.removeItem('paydaily_user');
+      const token = localStorage.getItem('paydaily_token');
+      const userData = localStorage.getItem('paydaily_user');
+
+      if (token && userData) {
+        try {
+          const user = JSON.parse(userData);
+          api.setAuthToken(token);
+          dispatch({
+            type: 'SET_USER',
+            payload: { user, token }
+          });
+          return;
+        } catch (error) {
+          console.error('Ошибка восстановления сессии:', error);
+          localStorage.removeItem('paydaily_token');
+          localStorage.removeItem('paydaily_user');
+        }
+      }
+
+      // Если нет сохраненной сессии, пробуем авторизоваться через Telegram
+      if (telegramUser && tg && tg.initData) {
+        try {
+          await login(tg.initData);
+        } catch (error) {
+          console.error('Ошибка автоавторизации:', error);
+          dispatch({ type: 'SET_LOADING', payload: false });
+        }
+      } else {
         dispatch({ type: 'SET_LOADING', payload: false });
       }
-    } else {
-      dispatch({ type: 'SET_LOADING', payload: false });
-    }
-  }, []);
+    };
+
+    initAuth();
+  }, [isReady, telegramUser, tg]);
 
   // Авторизация через Telegram
   const login = async (initData, referralCode = null) => {
@@ -84,7 +102,7 @@ export const AuthProvider = ({ children }) => {
         referralCode
       });
 
-      const { token, user } = response.data;
+      const { token, user } = response;
 
       // Сохраняем в localStorage
       localStorage.setItem('paydaily_token', token);
@@ -108,7 +126,7 @@ export const AuthProvider = ({ children }) => {
       return { success: true, user, token };
     } catch (error) {
       console.error('Ошибка авторизации:', error);
-      const errorMessage = error.response?.data?.error || 'Ошибка авторизации';
+      const errorMessage = error.response?.data?.error || error.message || 'Ошибка авторизации';
       
       dispatch({
         type: 'SET_ERROR',
@@ -145,7 +163,7 @@ export const AuthProvider = ({ children }) => {
   const performCheckIn = async () => {
     try {
       const response = await api.post('/auth/checkin');
-      const { bonus, streak, newBalance, levelChanged, newLevel, message } = response.data.data;
+      const { bonus, streak, newBalance, levelChanged, newLevel, message } = response.data;
 
       // Обновляем пользователя
       updateUser({
@@ -184,7 +202,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await api.put('/auth/profile', profileData);
       
-      updateUser(response.data.data.user);
+      updateUser(response.data.user);
       toast.success('Профиль успешно обновлен');
       
       return { success: true };
@@ -199,44 +217,36 @@ export const AuthProvider = ({ children }) => {
   // Получение актуальных данных пользователя
   const refreshUser = async () => {
     try {
-      const response = await api.get('/auth/me');
-      const user = response.data.data;
-      
-      updateUser(user);
-      return { success: true, user };
+      const response = await api.get('/auth/profile');
+      updateUser(response.user);
+      return { success: true };
     } catch (error) {
-      console.error('Ошибка обновления данных пользователя:', error);
-      return { success: false, error: error.response?.data?.error };
+      console.error('Ошибка обновления данных:', error);
+      return { success: false };
     }
   };
 
-  // Проверка действительности токена
+  // Проверка токена
   const verifyToken = async () => {
     try {
-      const response = await api.post('/auth/verify-token');
-      return { success: true, valid: response.data.data.valid };
+      const response = await api.get('/auth/profile');
+      return { success: true, user: response.user };
     } catch (error) {
-      // Если токен недействителен, выходим из системы
-      if (error.response?.status === 401) {
-        logout();
-      }
-      return { success: false, error: error.response?.data?.error };
+      console.error('Токен недействителен:', error);
+      logout();
+      return { success: false };
     }
   };
 
   const value = {
-    user: state.user,
-    token: state.token,
-    loading: state.loading,
-    error: state.error,
+    ...state,
     login,
     logout,
     updateUser,
     performCheckIn,
     updateProfile,
     refreshUser,
-    verifyToken,
-    isAuthenticated: !!state.user && !!state.token
+    verifyToken
   };
 
   return (
@@ -249,7 +259,7 @@ export const AuthProvider = ({ children }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth должен использоваться внутри AuthProvider');
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 }; 

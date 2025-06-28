@@ -2,29 +2,58 @@ import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
+// Создаем экземпляр axios
+const apiClient = axios.create({
+  baseURL: API_URL,
+  timeout: 10000,
+});
+
+// Функции для управления токеном
+const setAuthToken = (token) => {
+  if (token) {
+    apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete apiClient.defaults.headers.common['Authorization'];
+  }
+};
+
+const removeAuthToken = () => {
+  delete apiClient.defaults.headers.common['Authorization'];
+};
+
 export const api = {
+  // Функции для управления токеном
+  setAuthToken,
+  removeAuthToken,
+  
+  // HTTP методы
+  get: (url) => apiClient.get(url).then(r => r.data),
+  post: (url, data) => apiClient.post(url, data).then(r => r.data),
+  put: (url, data) => apiClient.put(url, data).then(r => r.data),
+  delete: (url) => apiClient.delete(url).then(r => r.data),
+  
   auth: {
-    telegram: (initData) => axios.post(`${API_URL}/auth/telegram`, { initData }).then(r => r.data),
-    checkin: () => axios.post(`${API_URL}/auth/checkin`).then(r => r.data),
-    profile: () => axios.get(`${API_URL}/auth/profile`).then(r => r.data),
+    telegram: (initData) => apiClient.post('/auth/telegram', { initData }).then(r => r.data),
+    checkin: () => apiClient.post('/auth/checkin').then(r => r.data),
+    profile: () => apiClient.get('/auth/profile').then(r => r.data),
   },
   tasks: {
-    list: () => axios.get(`${API_URL}/tasks`).then(r => r.data),
-    detail: (id) => axios.get(`${API_URL}/tasks/${id}`).then(r => r.data),
-    start: (id) => axios.post(`${API_URL}/tasks/${id}/start`).then(r => r.data),
-    complete: (id, data) => axios.post(`${API_URL}/tasks/${id}/complete`, data).then(r => r.data),
-    history: () => axios.get(`${API_URL}/tasks/history`).then(r => r.data),
+    list: () => apiClient.get('/tasks').then(r => r.data),
+    detail: (id) => apiClient.get(`/tasks/${id}`).then(r => r.data),
+    start: (id) => apiClient.post(`/tasks/${id}/start`).then(r => r.data),
+    complete: (id, data) => apiClient.post(`/tasks/${id}/complete`, data).then(r => r.data),
+    history: () => apiClient.get('/tasks/history').then(r => r.data),
   },
   users: {
-    leaderboard: () => axios.get(`${API_URL}/users/leaderboard`).then(r => r.data),
-    referrals: () => axios.get(`${API_URL}/users/referrals`).then(r => r.data),
-    stats: () => axios.get(`${API_URL}/users/stats`).then(r => r.data),
-    achievements: () => axios.get(`${API_URL}/users/achievements`).then(r => r.data),
+    leaderboard: () => apiClient.get('/users/leaderboard').then(r => r.data),
+    referrals: () => apiClient.get('/users/referrals').then(r => r.data),
+    stats: () => apiClient.get('/users/stats').then(r => r.data),
+    achievements: () => apiClient.get('/users/achievements').then(r => r.data),
   },
   payments: {
-    withdraw: (data) => axios.post(`${API_URL}/payments/withdraw`, data).then(r => r.data),
-    history: () => axios.get(`${API_URL}/payments/history`).then(r => r.data),
-    validate: (address) => axios.post(`${API_URL}/payments/validate`, { address }).then(r => r.data),
+    withdraw: (data) => apiClient.post('/payments/withdraw', data).then(r => r.data),
+    history: () => apiClient.get('/payments/history').then(r => r.data),
+    validate: (address) => apiClient.post('/payments/validate', { address }).then(r => r.data),
   }
 };
 
