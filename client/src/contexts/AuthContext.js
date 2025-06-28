@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }) => {
     const initAuth = async () => {
       if (!isReady) return;
 
-      console.log('Auth init:', { isReady, telegramUser, initData: tg?.initData });
+      console.log('Auth init:', { isReady, telegramUser, tg, initData: tg?.initData });
 
       const token = localStorage.getItem('paydaily_token');
       const userData = localStorage.getItem('paydaily_user');
@@ -70,6 +70,7 @@ export const AuthProvider = ({ children }) => {
             type: 'SET_USER',
             payload: { user, token }
           });
+          console.log('Session restored from localStorage');
           return;
         } catch (error) {
           console.error('Session recovery error:', error);
@@ -78,12 +79,15 @@ export const AuthProvider = ({ children }) => {
         }
       }
 
-      // If no saved session, try to authorize via Telegram
+      // Явно логируем initData
       const initData = tg?.initData || tg?.initDataUnsafe || window.Telegram?.WebApp?.initData || '';
+      console.log('initData for login:', initData);
+
       if (initData) {
         try {
           console.log('Calling login with initData:', initData);
           await login(initData);
+          console.log('login(initData) completed');
         } catch (error) {
           console.error('Auto-authorization error:', error);
           dispatch({ type: 'SET_LOADING', payload: false });
