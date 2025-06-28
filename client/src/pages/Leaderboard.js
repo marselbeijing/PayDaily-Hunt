@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
 
-export default function Leaderboard() {
-  const [users, setUsers] = useState([]);
+export default function Leaderboard({ onNavigate }) {
+  const [leaderboard, setLeaderboard] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     api.users.leaderboard()
       .then(data => {
-        setUsers(data.leaderboard || []);
+        setLeaderboard(data.leaderboard || []);
         setLoading(false);
       })
       .catch(() => {
@@ -18,26 +18,43 @@ export default function Leaderboard() {
       });
   }, []);
 
+  if (loading) return <div className="p-4">Загрузка лидерборда...</div>;
+  if (error) return <div className="p-4 text-red-500">{error}</div>;
+
   return (
     <div className="p-4 pt-2 pb-20">
       <h1 className="text-2xl font-bold mb-4">Лидерборд</h1>
-      {loading ? (
-        <div>Загрузка...</div>
-      ) : error ? (
-        <div className="text-red-500">{error}</div>
-      ) : users.length === 0 ? (
-        <div className="text-tg-hint text-sm">Нет данных для отображения.</div>
+      
+      {leaderboard.length === 0 ? (
+        <div className="bg-tg-card p-4 rounded-xl shadow text-tg-hint text-sm">
+          Нет данных для отображения
+        </div>
       ) : (
-        <ol className="space-y-2">
-          {users.slice(0, 10).map((user, idx) => (
-            <li key={user.id} className="bg-tg-card p-2 rounded flex justify-between items-center">
-              <span className="font-mono">#{idx + 1}</span>
-              <span className="flex-1 mx-2">{user.username || user.id}</span>
-              <span className="font-bold">{user.balance} USDT</span>
-            </li>
+        <div className="space-y-3">
+          {leaderboard.map((user, index) => (
+            <div key={user._id} className="bg-tg-card p-4 rounded-xl shadow flex items-center justify-between">
+              <div className="flex items-center">
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm mr-3 ${
+                  index === 0 ? 'bg-yellow-500 text-white' :
+                  index === 1 ? 'bg-gray-400 text-white' :
+                  index === 2 ? 'bg-orange-600 text-white' :
+                  'bg-gray-200 text-gray-600'
+                }`}>
+                  {index + 1}
+                </div>
+                <div>
+                  <div className="font-bold">{user.firstName} {user.lastName}</div>
+                  <div className="text-sm text-tg-hint">@{user.username || 'неизвестен'}</div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="font-mono font-bold">{user.balance || 0} USDT</div>
+                <div className="text-xs text-tg-hint">{user.completedTasks || 0} заданий</div>
+              </div>
+            </div>
           ))}
-        </ol>
+        </div>
       )}
     </div>
   );
-} 
+}

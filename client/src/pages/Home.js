@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
 
-export default function Home() {
+export default function Home({ onNavigate }) {
   const { user } = useAuth();
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,8 +28,8 @@ export default function Home() {
         <div className="text-3xl font-mono font-bold">{user?.balance ?? 0} <span className="text-base font-normal">USDT</span></div>
       </div>
       <div className="grid grid-cols-2 gap-4 mb-6">
-        <button className="btn btn-primary">Выполнить задание</button>
-        <button className="btn btn-secondary">Получить награду</button>
+        <button className="btn btn-primary" onClick={() => onNavigate('tasks')}>Выполнить задание</button>
+        <button className="btn btn-secondary" onClick={() => onNavigate('wallet')}>Получить награду</button>
       </div>
       <div className="bg-tg-card p-4 rounded-xl shadow text-tg-hint text-sm mb-4">
         Ежедневно выполняй задания и получай реальные награды в криптовалюте!

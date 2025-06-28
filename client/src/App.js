@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTelegram } from './hooks/useTelegram';
 import LoadingScreen from './components/LoadingScreen';
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Tasks from './pages/Tasks';
 import Profile from './pages/Profile';
@@ -12,13 +11,11 @@ import Leaderboard from './pages/Leaderboard';
 import { AuthProvider } from './contexts/AuthContext';
 
 function App() {
-  const { 
-    tg, 
-    user, 
-    isReady
-  } = useTelegram();
+  const { tg, isReady } = useTelegram();
   
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState('home');
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
 
   // Инициализация приложения
   useEffect(() => {
@@ -44,6 +41,32 @@ function App() {
     initApp();
   }, [isReady, tg]);
 
+  const navigateTo = (page, params = {}) => {
+    setCurrentPage(page);
+    if (params.taskId) {
+      setSelectedTaskId(params.taskId);
+    }
+  };
+
+  const renderCurrentPage = () => {
+    switch (currentPage) {
+      case 'home':
+        return <Home onNavigate={navigateTo} />;
+      case 'tasks':
+        return <Tasks onNavigate={navigateTo} />;
+      case 'task-detail':
+        return <TaskDetail taskId={selectedTaskId} onNavigate={navigateTo} />;
+      case 'profile':
+        return <Profile onNavigate={navigateTo} />;
+      case 'wallet':
+        return <Wallet onNavigate={navigateTo} />;
+      case 'leaderboard':
+        return <Leaderboard onNavigate={navigateTo} />;
+      default:
+        return <Home onNavigate={navigateTo} />;
+    }
+  };
+
   if (loading) {
     return <LoadingScreen />;
   }
@@ -59,19 +82,10 @@ function App() {
 
   return (
     <AuthProvider>
-      <Router>
-        <div className="min-h-screen bg-tg-bg safe-area-top safe-area-bottom pb-16">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/tasks" element={<Tasks />} />
-            <Route path="/tasks/:id" element={<TaskDetail />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/wallet" element={<Wallet />} />
-            <Route path="/leaderboard" element={<Leaderboard />} />
-          </Routes>
-          <Navigation />
-        </div>
-      </Router>
+      <div className="min-h-screen bg-tg-bg safe-area-top safe-area-bottom pb-16">
+        {renderCurrentPage()}
+        <Navigation currentPage={currentPage} onNavigate={navigateTo} />
+      </div>
     </AuthProvider>
   );
 }

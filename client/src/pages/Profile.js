@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
 
-export default function Profile() {
-  const { user } = useAuth();
+export default function Profile({ onNavigate }) {
+  const { user, logout } = useAuth();
   const [profile, setProfile] = useState(null);
   const [referrals, setReferrals] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,33 +30,22 @@ export default function Profile() {
 
   return (
     <div className="p-4 pt-2 pb-20">
-      <h1 className="text-2xl font-bold mb-2">Профиль</h1>
-      <div className="mb-4">
-        <div className="text-tg-hint text-sm mb-1">Telegram</div>
-        <div className="font-mono">{profile?.username || user?.username || '—'}</div>
-        <div className="text-tg-hint text-xs">ID: {profile?.id || user?.id || '—'}</div>
+      <h1 className="text-2xl font-bold mb-4">Профиль</h1>
+      <div className="bg-tg-card p-4 rounded-xl shadow mb-4">
+        <div className="text-lg font-bold mb-2">{user?.firstName} {user?.lastName}</div>
+        <div className="text-tg-hint text-sm mb-1">@{user?.username || 'не указан'}</div>
+        <div className="text-tg-hint text-sm">ID: {user?.telegramId}</div>
       </div>
-      <div className="mb-4">
-        <div className="text-tg-hint text-sm mb-1">VIP уровень</div>
-        <div className="font-bold text-lg">{profile?.vipLevel ?? 0}</div>
+      <div className="bg-tg-card p-4 rounded-xl shadow mb-4">
+        <div className="text-lg font-bold mb-2">Баланс</div>
+        <div className="text-3xl font-mono font-bold">{user?.balance ?? 0} <span className="text-base font-normal">USDT</span></div>
       </div>
-      <div className="mb-4">
-        <div className="text-tg-hint text-sm mb-1">Рефералы</div>
-        <div className="text-tg-hint text-xs mb-1">Всего: {referrals.length}</div>
-        {referrals.length === 0 ? (
-          <div className="text-tg-hint text-xs">Нет рефералов</div>
-        ) : (
-          <ul className="text-xs list-disc pl-4">
-            {referrals.slice(0, 5).map((ref, idx) => (
-              <li key={idx}>{ref.username || ref.id}</li>
-            ))}
-            {referrals.length > 5 && <li>и ещё {referrals.length - 5}...</li>}
-          </ul>
-        )}
+      <div className="bg-tg-card p-4 rounded-xl shadow mb-4">
+        <div className="text-lg font-bold mb-2">Статистика</div>
+        <div className="text-sm text-tg-hint">Выполнено заданий: {user?.completedTasks ?? 0}</div>
+        <div className="text-sm text-tg-hint">Заработано: {user?.totalEarned ?? 0} USDT</div>
       </div>
-      <div className="bg-tg-card p-4 rounded-xl shadow text-tg-hint text-sm">
-        Здесь будет больше информации о достижениях и настройках.
-      </div>
+      <button className="btn btn-secondary w-full" onClick={logout}>Выйти</button>
     </div>
   );
 } 

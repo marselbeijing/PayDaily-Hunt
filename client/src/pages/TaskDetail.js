@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 
-export default function TaskDetail() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+export default function TaskDetail({ taskId, onNavigate }) {
   const [task, setTask] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,7 +9,13 @@ export default function TaskDetail() {
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
-    api.tasks.detail(id)
+    if (!taskId) {
+      setError('ID задания не указан');
+      setLoading(false);
+      return;
+    }
+
+    api.tasks.detail(taskId)
       .then(data => {
         setTask(data.task);
         setLoading(false);
@@ -21,10 +24,10 @@ export default function TaskDetail() {
         setError('Ошибка загрузки задания');
         setLoading(false);
       });
-  }, [id]);
+  }, [taskId]);
 
   const handleComplete = () => {
-    api.tasks.complete(id, {})
+    api.tasks.complete(taskId, {})
       .then(data => {
         setCompleted(true);
         setMessage(data.message || 'Задание выполнено!');
@@ -40,7 +43,7 @@ export default function TaskDetail() {
 
   return (
     <div className="p-4 pt-2 pb-20">
-      <button className="mb-4 text-blue-500" onClick={() => navigate(-1)}>&larr; Назад</button>
+      <button className="mb-4 text-blue-500" onClick={() => onNavigate('tasks')}>&larr; Назад</button>
       <h1 className="text-2xl font-bold mb-2">{task.title}</h1>
       <div className="text-tg-hint text-sm mb-2">{task.description}</div>
       <div className="mb-4">Награда: <b>{task.reward} USDT</b></div>
@@ -52,4 +55,4 @@ export default function TaskDetail() {
       {message && !completed && <div className="text-red-500 mt-2">{message}</div>}
     </div>
   );
-} 
+}

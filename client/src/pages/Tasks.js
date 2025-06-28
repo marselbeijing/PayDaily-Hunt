@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../services/api';
-import { useNavigate } from 'react-router-dom';
 
-export default function Tasks() {
+export default function Tasks({ onNavigate }) {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     api.tasks.list()
@@ -38,7 +36,7 @@ export default function Tasks() {
               <div className="text-tg-hint text-sm mb-2">{task.description}</div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-tg-hint">Награда: <b>{task.reward} USDT</b></span>
-                <button className="btn btn-primary btn-sm" onClick={() => navigate(`/tasks/${task._id}`)}>Выполнить</button>
+                <button className="btn btn-primary btn-sm" onClick={() => onNavigate('task-detail', { taskId: task._id })}>Выполнить</button>
               </div>
             </div>
           ))}
