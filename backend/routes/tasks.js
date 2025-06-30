@@ -28,68 +28,6 @@ const auth = async (req, res, next) => {
     }
 };
 
-// Получить список доступных заданий
-router.get('/', auth, async (req, res) => {
-    try {
-        const { category, type, difficulty, page = 1, limit = 20 } = req.query;
-        const user = req.user;
-        
-        // Базовый фильтр
-        const filter = {
-            isActive: true,
-            'requirements.minLevel': { $lte: user.level }
-        };
-        
-        // Дополнительные фильтры
-        if (category) filter.category = category;
-        if (type) filter.type = type;
-        if (difficulty) filter.difficulty = difficulty;
-        
-        // Проверка VIP уровня
-        const vipLevels = ['bronze', 'silver', 'gold', 'platinum', 'diamond'];
-        const userVipIndex = vipLevels.indexOf(user.vipLevel);
-        filter['requirements.vipLevelRequired'] = {
-            $in: vipLevels.slice(0, userVipIndex + 1)
-        };
-        
-        const skip = (page - 1) * limit;
-        
-        const tasks = await Task.find(filter)
-            .sort({ isSponsored: -1, isPremium: -1, reward: -1 })
-            .skip(skip)
-            .limit(Number(limit))
-            .lean();
-        
-        // Получить завершенные задания пользователя
-        const completedTaskIds = await TaskCompletion.find({
-            user: user._id,
-            status: { $in: ['approved', 'submitted', 'verified'] }
-        }).distinct('task');
-        
-        // Обогатить данные заданий
-        const enrichedTasks = tasks.map(task => ({
-            ...task,
-            userReward: Task.prototype.getRewardForUser.call(task, user),
-            isCompleted: completedTaskIds.includes(task._id),
-            canComplete: Task.prototype.canUserComplete.call(task, user)
-        }));
-        
-        res.json({
-            success: true,
-            tasks: enrichedTasks,
-            pagination: {
-                page: Number(page),
-                limit: Number(limit),
-                hasMore: tasks.length === Number(limit)
-            }
-        });
-        
-    } catch (error) {
-        console.error('Ошибка получения заданий:', error);
-        res.status(500).json({ error: 'Внутренняя ошибка сервера' });
-    }
-});
-
 // Получить историю выполненных заданий
 router.get('/user/history', auth, async (req, res) => {
     try {
@@ -168,6 +106,68 @@ router.get('/:taskId', auth, async (req, res) => {
         
     } catch (error) {
         console.error('Ошибка получения задания:', error);
+        res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+    }
+});
+
+// Получить список доступных заданий
+router.get('/', auth, async (req, res) => {
+    try {
+        const { category, type, difficulty, page = 1, limit = 20 } = req.query;
+        const user = req.user;
+        
+        // Базовый фильтр
+        const filter = {
+            isActive: true,
+            'requirements.minLevel': { $lte: user.level }
+        };
+        
+        // Дополнительные фильтры
+        if (category) filter.category = category;
+        if (type) filter.type = type;
+        if (difficulty) filter.difficulty = difficulty;
+        
+        // Проверка VIP уровня
+        const vipLevels = ['bronze', 'silver', 'gold', 'platinum', 'diamond'];
+        const userVipIndex = vipLevels.indexOf(user.vipLevel);
+        filter['requirements.vipLevelRequired'] = {
+            $in: vipLevels.slice(0, userVipIndex + 1)
+        };
+        
+        const skip = (page - 1) * limit;
+        
+        const tasks = await Task.find(filter)
+            .sort({ isSponsored: -1, isPremium: -1, reward: -1 })
+            .skip(skip)
+            .limit(Number(limit))
+            .lean();
+        
+        // Получить завершенные задания пользователя
+        const completedTaskIds = await TaskCompletion.find({
+            user: user._id,
+            status: { $in: ['approved', 'submitted', 'verified'] }
+        }).distinct('task');
+        
+        // Обогатить данные заданий
+        const enrichedTasks = tasks.map(task => ({
+            ...task,
+            userReward: Task.prototype.getRewardForUser.call(task, user),
+            isCompleted: completedTaskIds.includes(task._id),
+            canComplete: Task.prototype.canUserComplete.call(task, user)
+        }));
+        
+        res.json({
+            success: true,
+            tasks: enrichedTasks,
+            pagination: {
+                page: Number(page),
+                limit: Number(limit),
+                hasMore: tasks.length === Number(limit)
+            }
+        });
+        
+    } catch (error) {
+        console.error('Ошибка получения заданий:', error);
         res.status(500).json({ error: 'Внутренняя ошибка сервера' });
     }
 });
