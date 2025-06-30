@@ -10,11 +10,20 @@ const app = express();
 // Middleware
 app.use(helmet());
 app.use(cors({
-    origin: [
-        process.env.FRONTEND_URL || 'http://localhost:3000',
-        'https://paydaily-hunt.vercel.app',
-        'http://localhost:3000'
-    ],
+    origin: function(origin, callback) {
+        const allowed = [
+            process.env.FRONTEND_URL || 'https://pay-daily-hunt.vercel.app',
+            'https://pay-daily-hunt.vercel.app',
+            'https://www.pay-daily-hunt.vercel.app'
+        ];
+        if (!origin || allowed.includes(origin)) {
+            console.log('CORS allow:', origin);
+            callback(null, true);
+        } else {
+            console.log('CORS block:', origin);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }));
 
