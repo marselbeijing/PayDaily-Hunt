@@ -62,7 +62,7 @@ export default function Tasks({ onNavigate }) {
                   <div className="text-tg-hint text-sm mb-2">{offer.description}</div>
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-tg-hint">Reward: <b>{offer.payout_usd} USD</b></span>
-                    <a className="btn btn-secondary btn-sm" href={offer.tracking_url} target="_blank" rel="noopener noreferrer">Go</a>
+                    <a className="btn btn-secondary btn-sm" href={offer.tracking_url} target="_blank" rel="noopener noreferrer">Перейти</a>
                   </div>
                 </div>
               ))}
