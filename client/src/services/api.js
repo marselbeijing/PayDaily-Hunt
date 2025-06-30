@@ -41,7 +41,7 @@ export const api = {
     list: () => apiClient.get('/tasks').then(r => r.data),
     detail: (id) => apiClient.get(`/tasks/${id}`).then(r => r.data),
     start: (id) => apiClient.post(`/tasks/${id}/start`).then(r => r.data),
-    complete: (id, data) => apiClient.post(`/tasks/${id}/complete`, data).then(r => r.data),
+    complete: (id, data) => apiClient.post(`/tasks/${id}/submit`, data).then(r => r.data),
     history: () => apiClient.get('/tasks/user/history').then(r => r.data),
   },
   users: {
