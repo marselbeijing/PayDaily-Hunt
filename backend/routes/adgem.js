@@ -8,17 +8,21 @@ const ADGEM_APP_ID = '30674';
 console.log('AdGem router loaded');
 
 router.get('/offers', async (req, res) => {
+  console.log('AdGem /offers called', req.query);
   try {
-    const { user_id } = req.query;
-    const response = await axios.get(`https://api.adgem.com/v1/wall/${ADGEM_APP_ID}/offers`, {
-      params: {
-        user_id,
-      },
-      headers: {
-        Authorization: `Bearer ${ADGEM_API_KEY}`,
-      },
-    });
-    res.json(response.data);
+    // ВРЕМЕННАЯ ЗАГЛУШКА для диагностики
+    return res.json({ success: true, offers: [{ id: 1, name: 'Test Offer', payout_usd: 0.5 }] });
+    // Оригинальный код закомментирован:
+    // const { user_id } = req.query;
+    // const response = await axios.get(`https://api.adgem.com/v1/wall/${ADGEM_APP_ID}/offers`, {
+    //   params: {
+    //     user_id,
+    //   },
+    //   headers: {
+    //     Authorization: `Bearer ${ADGEM_API_KEY}`,
+    //   },
+    // });
+    // res.json(response.data);
   } catch (error) {
     res.status(500).json({ error: 'Ошибка при получении офферов AdGem', details: error.message });
   }
