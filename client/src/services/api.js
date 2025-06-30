@@ -56,7 +56,10 @@ export const api = {
     withdrawals: () => apiClient.get('/payments/withdrawals').then(r => r.data),
     history: () => apiClient.get('/payments/history').then(r => r.data),
     validate: (address) => apiClient.post('/payments/validate', { address }).then(r => r.data),
-  }
+  },
+  adgem: {
+    offers: (userId) => apiClient.get(`/adgem/offers?user_id=${userId}`).then(r => r.data),
+  },
 };
 
 // Formatting utilities
