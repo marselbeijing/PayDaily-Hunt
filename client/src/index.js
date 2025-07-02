@@ -36,4 +36,9 @@ root.render(
       }}
     />
   </React.StrictMode>
-); 
+);
+
+// Устанавливаем тёмную тему по умолчанию для локального запуска
+if (typeof document !== 'undefined') {
+  document.body.setAttribute('data-theme', 'dark');
+} 

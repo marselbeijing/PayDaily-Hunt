@@ -1,12 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
+import 'swiper/css';
+
+const SLIDE_DURATION = 3000;
+const slides = [
+  {
+    img: '/get-free-crypto.jpg', // Путь к вашей картинке, поместите её в public/
+    alt: 'Get Free Crypto',
+    label: 'Get Free Crypto',
+    onClick: () => window.open('https://freebitco.in/?r=55381223', '_blank'),
+  },
+  {
+    img: 'https://placehold.co/300x120/00BFFF/fff?text=Step+Boom',
+    alt: 'Step Boom',
+    label: 'Step Boom',
+    onClick: (onNavigate) => onNavigate('tasks'),
+  },
+  {
+    img: 'https://placehold.co/300x120/32CD32/fff?text=Best+tasks',
+    alt: 'Best tasks',
+    label: 'Best tasks',
+    onClick: (onNavigate) => onNavigate('tasks'),
+  },
+];
 
 export default function Home({ onNavigate }) {
   const { user, loading: authLoading, token } = useAuth();
   const [history, setHistory] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     if (authLoading || !token) return;
@@ -24,23 +50,35 @@ export default function Home({ onNavigate }) {
   return (
     <div className="p-4 pt-2 pb-20">
       <h1 className="text-2xl font-bold mb-2">Hello, {user?.firstName || 'Guest'}!</h1>
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <a
-          href="https://freebitco.in/?r=55381223"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex flex-col items-center justify-center bg-tg-card rounded-2xl shadow card-hover h-28 w-full"
+      <div className="mb-6">
+        <Swiper
+          spaceBetween={16}
+          slidesPerView={1.2}
+          className="rounded-2xl"
+          autoplay={{ delay: SLIDE_DURATION, disableOnInteraction: false }}
+          loop={true}
+          modules={[Autoplay]}
+          onSlideChange={swiper => setActiveIndex(swiper.realIndex)}
         >
-          <span role="img" aria-label="crypto" className="text-3xl mb-2">🪙</span>
-          <span className="font-semibold text-sm">Free Crypto Faucet</span>
-        </a>
-        <button
-          className="flex flex-col items-center justify-center bg-tg-card rounded-2xl shadow card-hover h-28 w-full"
-          onClick={() => onNavigate('tasks')}
-        >
-          <span role="img" aria-label="steps" className="text-3xl mb-2">🏃‍♂️</span>
-          <span className="font-semibold text-sm">Pay Steps</span>
-        </button>
+          {slides.map((slide, idx) => (
+            <SwiperSlide key={idx}>
+              <div
+                className="block bg-tg-card rounded-2xl shadow card-hover overflow-hidden h-36 flex flex-col items-center justify-center relative cursor-pointer"
+                onClick={() => slide.onClick(onNavigate)}
+              >
+                <img src={slide.img} alt={slide.alt} className="w-full h-24 object-cover mb-2" />
+                <span className="font-semibold text-sm">{slide.label}</span>
+                {/* Индикатор автоперехода */}
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-300">
+                  <div
+                    className="bg-blue-500 h-1 transition-all"
+                    style={{ width: activeIndex === idx ? '100%' : '0%', transition: `width ${SLIDE_DURATION}ms linear` }}
+                  />
+                </div>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
       <div className="mb-4">
         <div className="text-tg-hint text-sm mb-1">Your balance</div>
