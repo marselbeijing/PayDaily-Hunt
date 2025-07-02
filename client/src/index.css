@@ -44,7 +44,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--tg-theme-bg-color);
+  background: linear-gradient(120deg, #181c24 0%, #232b36 60%, #10131a 100%);
   color: var(--tg-theme-text-color);
   overflow-x: hidden;
 }
@@ -257,4 +257,38 @@ body {
   .btn {
     @apply px-3 py-2 text-sm;
   }
+}
+
+/* Ограничение ширины для мобильного вида Telegram WebApp */
+#root {
+  max-width: 420px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--tg-theme-bg-color);
+  box-shadow: 0 0 24px 0 rgba(0,0,0,0.04);
+}
+
+body::before {
+  content: '$';
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 260px;
+  color: #3fc380;
+  opacity: 0.22;
+  pointer-events: none;
+  z-index: 0;
+  animation: dollar-float 8s ease-in-out infinite alternate, dollar-rotate 16s linear infinite;
+}
+
+@keyframes dollar-float {
+  0% { top: 16%; opacity: 0.18; }
+  50% { top: 24%; opacity: 0.28; }
+  100% { top: 16%; opacity: 0.18; }
+}
+
+@keyframes dollar-rotate {
+  0% { transform: translateX(-50%) rotate(-6deg); }
+  100% { transform: translateX(-50%) rotate(6deg); }
 } 
