@@ -54,8 +54,9 @@ export default function Home({ onNavigate }) {
       <h1 className="text-2xl font-bold mb-2 text-center">Hello, {user?.firstName || 'Guest'}!</h1>
       <div className="mb-6">
         <Swiper
-          spaceBetween={16}
-          slidesPerView={1.2}
+          spaceBetween={0}
+          slidesPerView={1}
+          centeredSlides={true}
           className="rounded-2xl"
           autoplay={{ delay: SLIDE_DURATION, disableOnInteraction: false }}
           loop={true}
@@ -65,7 +66,7 @@ export default function Home({ onNavigate }) {
           {slides.map((slide, idx) => (
             <SwiperSlide key={idx}>
               <div
-                className="block bg-tg-card rounded-2xl shadow card-hover overflow-hidden h-36 flex flex-col items-center justify-center relative cursor-pointer"
+                className="block bg-tg-card rounded-2xl shadow card-hover overflow-hidden h-36 flex flex-col items-center justify-center relative cursor-pointer mx-auto"
                 onClick={() => slide.onClick(onNavigate)}
               >
                 <div className="w-full aspect-[1.887] bg-black flex items-center justify-center rounded-2xl overflow-hidden relative">

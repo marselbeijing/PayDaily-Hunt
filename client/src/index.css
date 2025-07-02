@@ -304,3 +304,16 @@ body {
   50% { transform: translateX(14px) translateY(-16px) rotate(-1.3deg); }
   100% { transform: translateX(0px) translateY(0px) rotate(0deg); }
 }
+
+/* Центрирование слайдера */
+.swiper {
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.swiper-slide {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
