@@ -4,8 +4,6 @@ import { api } from '../services/api';
 
 export default function Profile({ onNavigate }) {
   const { user, logout, loading: authLoading, token } = useAuth();
-  const [profile, setProfile] = useState(null);
-  const [referrals, setReferrals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -16,8 +14,6 @@ export default function Profile({ onNavigate }) {
       api.users.referrals()
     ])
       .then(([profileData, referralsData]) => {
-        setProfile(profileData.user || null);
-        setReferrals(referralsData.referrals || []);
         setLoading(false);
       })
       .catch(() => {
