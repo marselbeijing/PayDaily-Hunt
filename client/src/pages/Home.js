@@ -24,13 +24,27 @@ export default function Home({ onNavigate }) {
   return (
     <div className="p-4 pt-2 pb-20">
       <h1 className="text-2xl font-bold mb-2">Hello, {user?.firstName || 'Guest'}!</h1>
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        <a
+          href="https://freebitco.in/?r=55381223"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex flex-col items-center justify-center bg-tg-card rounded-2xl shadow card-hover h-28 w-full"
+        >
+          <span role="img" aria-label="crypto" className="text-3xl mb-2">🪙</span>
+          <span className="font-semibold text-sm">Free Crypto Faucet</span>
+        </a>
+        <button
+          className="flex flex-col items-center justify-center bg-tg-card rounded-2xl shadow card-hover h-28 w-full"
+          onClick={() => onNavigate('tasks')}
+        >
+          <span role="img" aria-label="steps" className="text-3xl mb-2">🏃‍♂️</span>
+          <span className="font-semibold text-sm">Pay Steps</span>
+        </button>
+      </div>
       <div className="mb-4">
         <div className="text-tg-hint text-sm mb-1">Your balance</div>
         <div className="text-3xl font-mono font-bold">{user?.balance ?? 0} <span className="text-base font-normal">USDT</span></div>
-      </div>
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <button className="btn btn-primary" onClick={() => onNavigate('tasks')}>Complete Task</button>
-        <button className="btn btn-secondary" onClick={() => onNavigate('wallet')}>Get Reward</button>
       </div>
       <div className="bg-tg-card p-4 rounded-xl shadow text-tg-hint text-sm mb-4">
         Complete daily tasks and earn real cryptocurrency rewards!
