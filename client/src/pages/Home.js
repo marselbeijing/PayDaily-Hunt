@@ -57,7 +57,8 @@ export default function Home({ onNavigate }) {
           spaceBetween={16}
           slidesPerView={1.1}
           centeredSlides={true}
-          className="rounded-2xl"
+          className="rounded-2xl mx-auto"
+          style={{ paddingLeft: '8%', paddingRight: '8%' }}
           autoplay={{ delay: SLIDE_DURATION, disableOnInteraction: false }}
           loop={true}
           modules={[Autoplay]}
