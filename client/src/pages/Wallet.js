@@ -51,7 +51,7 @@ export default function Wallet({ onNavigate }) {
   };
 
   return (
-    <div className="p-4 pt-2 pb-20">
+    <div className="flex flex-col items-center justify-center min-h-screen text-center p-4">
       <h1 className="text-2xl font-bold mb-4">Wallet</h1>
       
       <div className="bg-tg-card p-4 rounded-xl shadow mb-6">

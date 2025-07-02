@@ -6,6 +6,8 @@ import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 
 const SLIDE_DURATION = 3000;
+const SLIDE_IMG_WIDTH = 1449;
+const SLIDE_IMG_HEIGHT = 768;
 const slides = [
   {
     img: '/get-free-crypto.jpg', // Путь к вашей картинке, поместите её в public/
@@ -49,7 +51,7 @@ export default function Home({ onNavigate }) {
 
   return (
     <div className="p-4 pt-2 pb-20">
-      <h1 className="text-2xl font-bold mb-2">Hello, {user?.firstName || 'Guest'}!</h1>
+      <h1 className="text-2xl font-bold mb-2 text-center">Hello, {user?.firstName || 'Guest'}!</h1>
       <div className="mb-6">
         <Swiper
           spaceBetween={16}
@@ -66,28 +68,30 @@ export default function Home({ onNavigate }) {
                 className="block bg-tg-card rounded-2xl shadow card-hover overflow-hidden h-36 flex flex-col items-center justify-center relative cursor-pointer"
                 onClick={() => slide.onClick(onNavigate)}
               >
-                <img src={slide.img} alt={slide.alt} className="w-full h-24 object-cover mb-2" />
-                <span className="font-semibold text-sm">{slide.label}</span>
-                {/* Индикатор автоперехода */}
-                <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-300">
-                  <div
-                    className="bg-blue-500 h-1 transition-all"
-                    style={{ width: activeIndex === idx ? '100%' : '0%', transition: `width ${SLIDE_DURATION}ms linear` }}
+                <div className="w-full aspect-[1.887] bg-black flex items-center justify-center rounded-2xl overflow-hidden relative">
+                  <img 
+                    src={slide.img} 
+                    alt={slide.alt} 
+                    className="w-full h-full object-cover"
+                    style={{ objectPosition: 'center 30%' }}
                   />
+                  {/* Индикатор автоперехода */}
+                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-300">
+                    <div
+                      className="bg-blue-500 h-1 transition-all"
+                      style={{ width: activeIndex === idx ? '100%' : '0%', transition: `width ${SLIDE_DURATION}ms linear` }}
+                    />
+                  </div>
                 </div>
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
       </div>
-      <div className="mb-4">
-        <div className="text-tg-hint text-sm mb-1">Your balance</div>
-        <div className="text-3xl font-mono font-bold">{user?.balance ?? 0} <span className="text-base font-normal">USDT</span></div>
-      </div>
-      <div className="bg-tg-card p-4 rounded-xl shadow text-tg-hint text-sm mb-4">
+      <div className="bg-tg-card p-4 rounded-xl shadow text-tg-hint text-sm mb-4 text-center">
         Complete daily tasks and earn real cryptocurrency rewards!
       </div>
-      <div className="mb-2 font-bold">Reward History</div>
+      <div className="mb-2 font-bold text-center">Reward History</div>
       {historyLoading ? (
         <div>Loading...</div>
       ) : error ? (
