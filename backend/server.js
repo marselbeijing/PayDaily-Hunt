@@ -57,6 +57,7 @@ const userRoutes = require('./routes/users');
 const partnerRoutes = require('./routes/partners');
 const paymentRoutes = require('./routes/payments');
 const adgemRoutes = require('./routes/adgem');
+const ewallRoutes = require('./routes/ewall');
 
 // Использование маршрутов
 app.use('/api/auth', authRoutes);
@@ -65,6 +66,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/partners', partnerRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/adgem', adgemRoutes);
+app.use('/api/ewall', ewallRoutes);
 
 // === AdGem Postback Handler ===
 app.get('/api/adgem/postback', async (req, res) => {
