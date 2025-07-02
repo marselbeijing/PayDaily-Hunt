@@ -66,23 +66,21 @@ export default function Home({ onNavigate }) {
           {slides.map((slide, idx) => (
             <SwiperSlide key={idx}>
               <div
-                className="block bg-tg-card rounded-2xl shadow card-hover overflow-hidden h-36 flex flex-col items-center justify-center relative cursor-pointer"
+                className="relative rounded-2xl overflow-hidden cursor-pointer aspect-[1.887]"
                 onClick={() => slide.onClick(onNavigate)}
               >
-                <div className="w-full aspect-[1.887] bg-black flex items-center justify-center rounded-2xl overflow-hidden relative">
-                  <img 
-                    src={slide.img} 
-                    alt={slide.alt} 
-                    className="w-full h-full object-cover"
-                    style={{ objectPosition: 'center 30%' }}
+                <img 
+                  src={slide.img} 
+                  alt={slide.alt} 
+                  className="w-full h-full object-cover"
+                  style={{ objectPosition: 'center 30%' }}
+                />
+                {/* Индикатор автоперехода */}
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-300">
+                  <div
+                    className="bg-blue-500 h-1 transition-all"
+                    style={{ width: activeIndex === idx ? '100%' : '0%', transition: `width ${SLIDE_DURATION}ms linear` }}
                   />
-                  {/* Индикатор автоперехода */}
-                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-300">
-                    <div
-                      className="bg-blue-500 h-1 transition-all"
-                      style={{ width: activeIndex === idx ? '100%' : '0%', transition: `width ${SLIDE_DURATION}ms linear` }}
-                    />
-                  </div>
                 </div>
               </div>
             </SwiperSlide>
