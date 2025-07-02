@@ -265,23 +265,23 @@ body {
 
 @keyframes floatDollar0 {
   0% { transform: translateX(0px) translateY(0px) rotate(0deg); }
-  25% { transform: translateX(-8px) translateY(-12px) rotate(-1deg); }
-  50% { transform: translateX(12px) translateY(-18px) rotate(1deg); }
-  75% { transform: translateX(-5px) translateY(-8px) rotate(-0.5deg); }
+  25% { transform: translateX(-15px) translateY(-30px) rotate(-1deg); }
+  50% { transform: translateX(20px) translateY(-25px) rotate(1deg); }
+  75% { transform: translateX(-5px) translateY(-12px) rotate(-0.5deg); }
   100% { transform: translateX(0px) translateY(0px) rotate(0deg); }
 }
 
 @keyframes floatDollar1 {
   0% { transform: translateX(0px) translateY(0px) rotate(0deg); }
-  30% { transform: translateX(15px) translateY(-10px) rotate(2deg); }
-  60% { transform: translateX(-10px) translateY(-20px) rotate(-1deg); }
+  30% { transform: translateX(25px) translateY(-25px) rotate(2deg); }
+  60% { transform: translateX(-18px) translateY(-30px) rotate(-1deg); }
   100% { transform: translateX(0px) translateY(0px) rotate(0deg); }
 }
 
 @keyframes floatDollar2 {
   0% { transform: translateX(0px) translateY(0px) rotate(0deg); }
-  20% { transform: translateX(-12px) translateY(-8px) rotate(1deg); }
-  70% { transform: translateX(8px) translateY(-15px) rotate(-1.5deg); }
+  20% { transform: translateX(-20px) translateY(-12px) rotate(1deg); }
+  70% { transform: translateX(15px) translateY(-25px) rotate(-1.5deg); }
   100% { transform: translateX(0px) translateY(0px) rotate(0deg); }
 }
 

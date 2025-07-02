@@ -9,8 +9,8 @@ const FloatingDollars = () => {
       id: i,
       x: Math.random() * 100, // позиция в процентах
       y: Math.random() * 100,
-      size: Math.random() * 6 + 8, // размер от 8 до 14px
-      opacity: Math.random() * 0.02 + 0.01, // очень низкая прозрачность 0.01-0.03
+      size: Math.random() * 8 + 12, // размер от 12 до 20px (увеличено)
+      opacity: Math.random() * 0.07 + 0.05, // прозрачность 0.05-0.12 (увеличено)
       duration: Math.random() * 25 + 35, // медленная анимация 35-60 секунд
       delay: Math.random() * 15, // случайная задержка
       direction: Math.random() > 0.5 ? 1 : -1,
