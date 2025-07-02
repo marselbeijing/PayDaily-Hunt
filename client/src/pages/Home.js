@@ -6,9 +6,11 @@ import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 
 const SLIDE_DURATION = 3000;
+const SLIDE_IMG_WIDTH = 1449;
+const SLIDE_IMG_HEIGHT = 768;
 const slides = [
   {
-    img: '/get-free-crypto.jpg',
+    img: '/get-free-crypto.jpg', // Путь к вашей картинке, поместите её в public/
     alt: 'Get Free Crypto',
     label: 'Get Free Crypto',
     onClick: () => window.open('https://freebitco.in/?r=55381223', '_blank'),
@@ -33,7 +35,6 @@ export default function Home({ onNavigate }) {
   const [historyLoading, setHistoryLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [progressKey, setProgressKey] = useState(0);
 
   useEffect(() => {
     if (authLoading || !token) return;
@@ -48,47 +49,40 @@ export default function Home({ onNavigate }) {
       });
   }, [authLoading, token]);
 
-  const handleSlideChange = (swiper) => {
-    setActiveIndex(swiper.realIndex);
-    setProgressKey(prev => prev + 1);
-  };
-
   return (
     <div className="p-4 pt-2 pb-20">
       <h1 className="text-2xl font-bold mb-2 text-center">Hello, {user?.firstName || 'Guest'}!</h1>
       <div className="mb-6">
         <Swiper
-          spaceBetween={0}
+          spaceBetween={16}
           slidesPerView={1}
           centeredSlides={true}
           className="rounded-2xl"
           autoplay={{ delay: SLIDE_DURATION, disableOnInteraction: false }}
           loop={true}
           modules={[Autoplay]}
-          onSlideChange={handleSlideChange}
+          onSlideChange={swiper => setActiveIndex(swiper.realIndex)}
         >
           {slides.map((slide, idx) => (
             <SwiperSlide key={idx}>
               <div
-                className="block rounded-2xl shadow card-hover overflow-hidden relative cursor-pointer mx-auto"
-                style={{ height: '180px', width: '100%' }}
+                className="block bg-tg-card rounded-2xl shadow card-hover overflow-hidden h-36 flex flex-col items-center justify-center relative cursor-pointer"
                 onClick={() => slide.onClick(onNavigate)}
               >
-                <img 
-                  src={slide.img} 
-                  alt={slide.alt} 
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-                {/* Индикатор прогресса 3 секунды */}
-                <div className="absolute bottom-0 left-0 w-full h-2 bg-gray-900 bg-opacity-60 rounded-b-2xl">
-                  <div
-                    key={`progress-${activeIndex}-${progressKey}`}
-                    className="slide-progress-bar h-2 rounded-b-2xl"
-                    style={{
-                      width: activeIndex === idx ? '100%' : '0%',
-                      transition: activeIndex === idx ? `width ${SLIDE_DURATION}ms linear` : 'width 0ms'
-                    }}
+                <div className="w-full aspect-[1.887] bg-black flex items-center justify-center rounded-2xl overflow-hidden relative">
+                  <img 
+                    src={slide.img} 
+                    alt={slide.alt} 
+                    className="w-full h-full object-cover"
+                    style={{ objectPosition: 'center 30%' }}
                   />
+                  {/* Индикатор автоперехода */}
+                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-300">
+                    <div
+                      className="bg-blue-500 h-1 transition-all"
+                      style={{ width: activeIndex === idx ? '100%' : '0%', transition: `width ${SLIDE_DURATION}ms linear` }}
+                    />
+                  </div>
                 </div>
               </div>
             </SwiperSlide>
@@ -117,4 +111,4 @@ export default function Home({ onNavigate }) {
       )}
     </div>
   );
-}
+} 
