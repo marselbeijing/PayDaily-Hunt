@@ -6,11 +6,9 @@ import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 
 const SLIDE_DURATION = 3000;
-const SLIDE_IMG_WIDTH = 1449;
-const SLIDE_IMG_HEIGHT = 768;
 const slides = [
   {
-    img: '/get-free-crypto.jpg', // Путь к вашей картинке, поместите её в public/
+    img: '/get-free-crypto.jpg',
     alt: 'Get Free Crypto',
     label: 'Get Free Crypto',
     onClick: () => window.open('https://freebitco.in/?r=55381223', '_blank'),
@@ -35,6 +33,7 @@ export default function Home({ onNavigate }) {
   const [historyLoading, setHistoryLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [progressKey, setProgressKey] = useState(0);
 
   useEffect(() => {
     if (authLoading || !token) return;
@@ -49,6 +48,11 @@ export default function Home({ onNavigate }) {
       });
   }, [authLoading, token]);
 
+  const handleSlideChange = (swiper) => {
+    setActiveIndex(swiper.realIndex);
+    setProgressKey(prev => prev + 1);
+  };
+
   return (
     <div className="p-4 pt-2 pb-20">
       <h1 className="text-2xl font-bold mb-2 text-center">Hello, {user?.firstName || 'Guest'}!</h1>
@@ -61,7 +65,7 @@ export default function Home({ onNavigate }) {
           autoplay={{ delay: SLIDE_DURATION, disableOnInteraction: false }}
           loop={true}
           modules={[Autoplay]}
-          onSlideChange={swiper => setActiveIndex(swiper.realIndex)}
+          onSlideChange={handleSlideChange}
         >
           {slides.map((slide, idx) => (
             <SwiperSlide key={idx}>
@@ -76,11 +80,15 @@ export default function Home({ onNavigate }) {
                     className="w-full h-full object-cover"
                     style={{ objectPosition: 'center 30%' }}
                   />
-                  {/* Индикатор автоперехода */}
-                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-300">
+                  {/* Индикатор прогресса 3 секунды */}
+                  <div className="absolute bottom-0 left-0 w-full h-1.5 bg-black bg-opacity-30">
                     <div
-                      className="bg-blue-500 h-1 transition-all"
-                      style={{ width: activeIndex === idx ? '100%' : '0%', transition: `width ${SLIDE_DURATION}ms linear` }}
+                      key={progressKey}
+                      className="bg-blue-400 h-1.5 shadow-sm"
+                      style={{
+                        width: activeIndex === idx ? '100%' : '0%',
+                        transition: activeIndex === idx ? `width ${SLIDE_DURATION}ms linear` : 'width 0ms'
+                      }}
                     />
                   </div>
                 </div>
@@ -111,4 +119,4 @@ export default function Home({ onNavigate }) {
       )}
     </div>
   );
-} 
+}
