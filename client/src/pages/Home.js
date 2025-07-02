@@ -55,7 +55,7 @@ export default function Home({ onNavigate }) {
       <div className="mb-6">
         <Swiper
           spaceBetween={16}
-          slidesPerView={1}
+          slidesPerView={1.1}
           centeredSlides={true}
           className="rounded-2xl"
           autoplay={{ delay: SLIDE_DURATION, disableOnInteraction: false }}
