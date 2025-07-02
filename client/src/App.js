@@ -8,6 +8,7 @@ import Navigation from './components/Navigation';
 import TaskDetail from './pages/TaskDetail';
 import Wallet from './pages/Wallet';
 import Leaderboard from './pages/Leaderboard';
+import FloatingDollars from './components/FloatingDollars';
 import { AuthProvider } from './contexts/AuthContext';
 
 function App() {
@@ -82,6 +83,7 @@ function App() {
 
   return (
     <AuthProvider>
+      <FloatingDollars />
       <div className="min-h-screen safe-area-top safe-area-bottom pb-16" style={{background: 'transparent'}}>
         {renderCurrentPage()}
         <Navigation currentPage={currentPage} onNavigate={navigateTo} />
