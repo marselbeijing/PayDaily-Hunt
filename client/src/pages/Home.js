@@ -96,7 +96,7 @@ export default function Home({ onNavigate }) {
       ) : error ? (
         <div className="text-red-500">{error}</div>
       ) : history.length === 0 ? (
-        <div className="text-tg-hint text-sm">No rewards in recent days.</div>
+        <div className="text-tg-hint text-sm flex items-center justify-center min-h-[10vh] text-center">No rewards in recent days.</div>
       ) : (
         <ul className="space-y-2">
           {history.slice(0, 5).map((item, idx) => (

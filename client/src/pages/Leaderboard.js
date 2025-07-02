@@ -22,15 +22,15 @@ export default function Leaderboard({ onNavigate }) {
   if (error) return <div className="p-4 text-red-500">{error}</div>;
 
   return (
-    <div className="p-4 pt-2 pb-20">
-      <h1 className="text-2xl font-bold mb-4">Leaderboard</h1>
+    <div className="p-4 pt-2 pb-20 flex flex-col items-center justify-center min-h-[60vh]">
+      <h1 className="text-2xl font-bold mb-4 text-center w-full">Leaderboard</h1>
       
       {leaderboard.length === 0 ? (
-        <div className="bg-tg-card p-4 rounded-xl shadow text-tg-hint text-sm">
+        <div className="bg-tg-card p-4 rounded-xl shadow text-tg-hint text-sm flex items-center justify-center w-full text-center">
           No data to display
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-3 w-full">
           {leaderboard.map((user, index) => (
             <div key={user._id} className="bg-tg-card p-4 rounded-xl shadow flex items-center justify-between">
               <div className="flex items-center">
