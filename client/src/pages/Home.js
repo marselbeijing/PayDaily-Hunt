@@ -70,27 +70,25 @@ export default function Home({ onNavigate }) {
           {slides.map((slide, idx) => (
             <SwiperSlide key={idx}>
               <div
-                className="block bg-tg-card rounded-2xl shadow card-hover overflow-hidden h-36 flex flex-col items-center justify-center relative cursor-pointer mx-auto"
+                className="block rounded-2xl shadow card-hover overflow-hidden relative cursor-pointer mx-auto"
+                style={{ height: '180px', width: '100%' }}
                 onClick={() => slide.onClick(onNavigate)}
               >
-                <div className="w-full aspect-[1.887] bg-black flex items-center justify-center rounded-2xl overflow-hidden relative">
-                  <img 
-                    src={slide.img} 
-                    alt={slide.alt} 
-                    className="w-full h-full object-cover"
-                    style={{ objectPosition: 'center 30%' }}
+                <img 
+                  src={slide.img} 
+                  alt={slide.alt} 
+                  className="w-full h-full object-cover rounded-2xl"
+                />
+                {/* Индикатор прогресса 3 секунды */}
+                <div className="absolute bottom-0 left-0 w-full h-2 bg-gray-900 bg-opacity-60 rounded-b-2xl">
+                  <div
+                    key={`progress-${activeIndex}-${progressKey}`}
+                    className="slide-progress-bar h-2 rounded-b-2xl"
+                    style={{
+                      width: activeIndex === idx ? '100%' : '0%',
+                      transition: activeIndex === idx ? `width ${SLIDE_DURATION}ms linear` : 'width 0ms'
+                    }}
                   />
-                  {/* Индикатор прогресса 3 секунды */}
-                  <div className="absolute bottom-0 left-0 w-full h-1.5 bg-black bg-opacity-30">
-                    <div
-                      key={progressKey}
-                      className="bg-blue-400 h-1.5 shadow-sm"
-                      style={{
-                        width: activeIndex === idx ? '100%' : '0%',
-                        transition: activeIndex === idx ? `width ${SLIDE_DURATION}ms linear` : 'width 0ms'
-                      }}
-                    />
-                  </div>
                 </div>
               </div>
             </SwiperSlide>
