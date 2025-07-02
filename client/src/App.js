@@ -82,7 +82,7 @@ function App() {
 
   return (
     <AuthProvider>
-      <div className="min-h-screen bg-tg-bg safe-area-top safe-area-bottom pb-16">
+      <div className="min-h-screen safe-area-top safe-area-bottom pb-16" style={{background: 'transparent'}}>
         {renderCurrentPage()}
         <Navigation currentPage={currentPage} onNavigate={navigateTo} />
       </div>

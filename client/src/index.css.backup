@@ -1,34 +1,39 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
-/* CSS переменные для Telegram темы */
+/* Базовые стили для Telegram WebApp */
 :root {
+  --tg-color-scheme: light;
   --tg-theme-bg-color: #ffffff;
   --tg-theme-text-color: #000000;
-  --tg-theme-hint-color: #999999;
+  --tg-theme-hint-color: #929292;
   --tg-theme-link-color: #2481cc;
   --tg-theme-button-color: #2481cc;
   --tg-theme-button-text-color: #ffffff;
-  --tg-theme-secondary-bg-color: #f1f1f1;
-  --tg-theme-section-bg-color: #ffffff;
+  --tg-theme-secondary-bg-color: #f5f5f5;
+  --tg-theme-header-bg-color: #ffffff;
   --tg-theme-accent-text-color: #2481cc;
+  --tg-theme-section-bg-color: #ffffff;
+  --tg-theme-section-header-text-color: #6d6d71;
   --tg-theme-subtitle-text-color: #999999;
   --tg-theme-destructive-text-color: #cc2929;
 }
 
-/* Темная тема по умолчанию для локального тестирования */
 [data-theme="dark"] {
-  --tg-theme-bg-color: #212121;
+  --tg-color-scheme: dark;
+  --tg-theme-bg-color: #17212b;
   --tg-theme-text-color: #ffffff;
-  --tg-theme-hint-color: #aaaaaa;
-  --tg-theme-link-color: #8ab4f8;
-  --tg-theme-button-color: #8ab4f8;
-  --tg-theme-button-text-color: #212121;
-  --tg-theme-secondary-bg-color: #181818;
-  --tg-theme-section-bg-color: #2a2a2a;
-  --tg-theme-accent-text-color: #8ab4f8;
-  --tg-theme-subtitle-text-color: #aaaaaa;
+  --tg-theme-hint-color: #708499;
+  --tg-theme-link-color: #6ab7ff;
+  --tg-theme-button-color: #2481cc;
+  --tg-theme-button-text-color: #ffffff;
+  --tg-theme-secondary-bg-color: #232e3c;
+  --tg-theme-header-bg-color: #17212b;
+  --tg-theme-accent-text-color: #6ab7ff;
+  --tg-theme-section-bg-color: #17212b;
+  --tg-theme-section-header-text-color: #708499;
+  --tg-theme-subtitle-text-color: #708499;
   --tg-theme-destructive-text-color: #ff6b6b;
 }
 
@@ -259,11 +264,10 @@ body {
   max-width: 420px;
   margin: 0 auto;
   min-height: 100vh;
-  background: linear-gradient(120deg, #181c24 0%, #232b36 60%, #10131a 100%);
+  background: var(--tg-theme-bg-color);
   box-shadow: 0 0 24px 0 rgba(0,0,0,0.04);
 }
 
-/* Анимированный символ доллара на фоне */
 body::before {
   content: '$';
   position: fixed;
@@ -274,7 +278,7 @@ body::before {
   color: #6fffb0;
   opacity: 0.32;
   pointer-events: none;
-  z-index: 1;
+  z-index: 0;
   animation: dollar-float 8s ease-in-out infinite alternate, dollar-rotate 16s linear infinite;
 }
 
@@ -287,36 +291,4 @@ body::before {
 @keyframes dollar-rotate {
   0% { transform: translateX(-50%) rotate(-6deg); }
   100% { transform: translateX(-50%) rotate(6deg); }
-}
-
-/* Дополнительные стили для лучшей видимости анимации */
-.app-container {
-  position: relative;
-  z-index: 2;
-}
-
-/* Усиливаем анимацию доллара */
-body::after {
-  content: '$';
-  position: fixed;
-  top: 60%;
-  right: 10%;
-  transform: translateX(-50%);
-  font-size: 120px;
-  color: rgba(111, 255, 176, 0.15);
-  pointer-events: none;
-  z-index: 1;
-  animation: dollar-float-secondary 6s ease-in-out infinite alternate-reverse, dollar-rotate-secondary 12s linear infinite;
-  font-weight: bold;
-  font-family: 'Arial', sans-serif;
-}
-
-@keyframes dollar-float-secondary {
-  0% { top: 55%; opacity: 0.1; }
-  100% { top: 65%; opacity: 0.2; }
-}
-
-@keyframes dollar-rotate-secondary {
-  0% { transform: translateX(-50%) rotate(3deg); }
-  100% { transform: translateX(-50%) rotate(-3deg); }
-}
+} 
