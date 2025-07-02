@@ -77,7 +77,7 @@ export default function Home({ onNavigate }) {
                 <img 
                   src={slide.img} 
                   alt={slide.alt} 
-                  className="w-full h-full object-cover rounded-2xl"
+                  className="absolute inset-0 w-full h-full object-cover"
                 />
                 {/* Индикатор прогресса 3 секунды */}
                 <div className="absolute bottom-0 left-0 w-full h-2 bg-gray-900 bg-opacity-60 rounded-b-2xl">
