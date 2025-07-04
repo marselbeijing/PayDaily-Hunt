@@ -8,17 +8,20 @@ export default function Tasks({ onNavigate }) {
   const [adgemOffers, setAdgemOffers] = useState([]);
   const [loadingTasks, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [unuTasks, setUnuTasks] = useState([]);
 
   useEffect(() => {
     if (loading || !token) return;
     setLoading(true);
     Promise.all([
       api.tasks.list(),
-      user ? api.adgem.offers(user.id) : Promise.resolve({ offers: [] })
+      user ? api.adgem.offers(user.id) : Promise.resolve({ offers: [] }),
+      api.unu.tasks()
     ])
-      .then(([data, adgemData]) => {
+      .then(([data, adgemData, unuData]) => {
         setTasks(data.tasks || []);
         setAdgemOffers(adgemData.offers || []);
+        setUnuTasks(unuData.tasks || []);
         setLoading(false);
       })
       .catch(err => {
@@ -33,7 +36,7 @@ export default function Tasks({ onNavigate }) {
   return (
     <div className="p-4 pt-2 pb-20">
       <h1 className="text-2xl font-bold mb-4">Tasks</h1>
-      {tasks.length === 0 && adgemOffers.length === 0 ? (
+      {tasks.length === 0 && adgemOffers.length === 0 && unuTasks.length === 0 ? (
         <div className="bg-tg-card p-4 rounded-xl shadow text-tg-hint text-sm">
           No available tasks.
         </div>
@@ -63,6 +66,21 @@ export default function Tasks({ onNavigate }) {
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-tg-hint">Reward: <b>{offer.payout_usd} USD</b></span>
                     <a className="btn btn-secondary btn-sm" href={offer.tracking_url} target="_blank" rel="noopener noreferrer">Перейти</a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          {unuTasks.length > 0 && (
+            <div className="space-y-4 mb-6">
+              <h2 className="text-xl font-semibold mb-2">UNU Tasks</h2>
+              {unuTasks.map(task => (
+                <div key={task.id} className="bg-tg-card p-4 rounded-xl shadow border border-blue-400">
+                  <div className="font-bold text-lg mb-1">{task.name}</div>
+                  <div className="text-tg-hint text-sm mb-2">Reward: <b>{task.price_rub} RUB</b></div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-tg-hint">Limit: {task.limit_total}</span>
+                    <button className="btn btn-secondary btn-sm" onClick={() => onNavigate('unu-task-detail', { taskId: task.id })}>Подробнее</button>
                   </div>
                 </div>
               ))}

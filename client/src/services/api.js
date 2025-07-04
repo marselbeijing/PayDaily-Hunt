@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const API_URL = 'https://paydaily-hunt.onrender.com/api';
+// Use local backend for development, production URL for production
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://paydaily-hunt.onrender.com/api'
+  : 'http://localhost:5000/api';
 
 // Create axios instance
 const apiClient = axios.create({
@@ -59,6 +62,22 @@ export const api = {
   },
   adgem: {
     offers: (userId) => apiClient.get(`/adgem/offers?user_id=${userId}`).then(r => r.data),
+  },
+  unu: {
+    tasks: (params) => apiClient.get('/unu/tasks', { params }).then(r => r.data),
+    taskDetail: (taskId) => apiClient.get(`/unu/tasks/${taskId}`).then(r => r.data),
+    createTask: (data) => apiClient.post('/unu/tasks', data).then(r => r.data),
+    setTaskLimit: (taskId, add_to_limit) => apiClient.post(`/unu/tasks/${taskId}/limit`, { add_to_limit }).then(r => r.data),
+    reports: (params) => apiClient.get('/unu/reports', { params }).then(r => r.data),
+    approveReport: (reportId) => apiClient.post(`/unu/reports/${reportId}/approve`).then(r => r.data),
+    rejectReport: (reportId, comment, reject_type) => apiClient.post(`/unu/reports/${reportId}/reject`, { comment, reject_type }).then(r => r.data),
+    balance: () => apiClient.get('/unu/balance').then(r => r.data),
+    expenses: (params) => apiClient.get('/unu/expenses', { params }).then(r => r.data),
+    tariffs: () => apiClient.get('/unu/tariffs').then(r => r.data),
+    folders: () => apiClient.get('/unu/folders').then(r => r.data),
+    createFolder: (name) => apiClient.post('/unu/folders', { name }).then(r => r.data),
+    deleteFolder: (folderId) => apiClient.delete(`/unu/folders/${folderId}`).then(r => r.data),
+    moveTask: (taskId, folder_id) => apiClient.post(`/unu/tasks/${taskId}/move`, { folder_id }).then(r => r.data),
   },
 };
 

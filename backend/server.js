@@ -14,7 +14,9 @@ app.use(cors({
         const allowed = [
             process.env.FRONTEND_URL || 'https://pay-daily-hunt.vercel.app',
             'https://pay-daily-hunt.vercel.app',
-            'https://www.pay-daily-hunt.vercel.app'
+            'https://www.pay-daily-hunt.vercel.app',
+            'http://localhost:3000', // For local development
+            'http://127.0.0.1:3000'  // Alternative localhost
         ];
         if (!origin || allowed.includes(origin)) {
             console.log('CORS allow:', origin);
@@ -58,6 +60,7 @@ const partnerRoutes = require('./routes/partners');
 const paymentRoutes = require('./routes/payments');
 const adgemRoutes = require('./routes/adgem');
 const ewallRoutes = require('./routes/ewall');
+const unuRoutes = require('./routes/unu');
 
 // Использование маршрутов
 app.use('/api/auth', authRoutes);
@@ -67,6 +70,7 @@ app.use('/api/partners', partnerRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/adgem', adgemRoutes);
 app.use('/api/ewall', ewallRoutes);
+app.use('/api/unu', unuRoutes);
 
 // === AdGem Postback Handler ===
 app.get('/api/adgem/postback', async (req, res) => {
@@ -156,7 +160,7 @@ app.use((err, req, res, next) => {
     });
 });
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`🚀 Сервер запущен на порту ${PORT}`);
     console.log(`📱 API доступен по адресу: http://localhost:${PORT}`);
