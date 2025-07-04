@@ -102,17 +102,17 @@ export const getVipLevelInfo = (level) => {
   return levels[level] || levels.none;
 };
 
-// Конвертация рублей в доллары (примерный курс 1 USD = 100 RUB)
+// Конвертация рублей в доллары (курс 1 USD = 80 RUB)
 export const convertRubToUsd = (rubAmount) => {
-  const exchangeRate = 100; // 1 USD = 100 RUB (приблизительно)
+  const exchangeRate = 80; // 1 USD = 80 RUB
   const usdAmount = rubAmount / exchangeRate;
   return usdAmount.toFixed(2);
 };
 
-// Форматирование цены в USD
+// Форматирование цены в USDT
 export const formatPriceInUsd = (rubAmount) => {
   const usdAmount = convertRubToUsd(rubAmount);
-  return `$${usdAmount}`;
+  return `${usdAmount} USDT`;
 };
 
 export const formatDate = (date) => {

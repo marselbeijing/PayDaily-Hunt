@@ -42,20 +42,12 @@ router.get('/rates', authenticateToken, async (req, res) => {
           icon: '💰'
         },
         {
-          type: 'USDT_ERC20',
-          network: 'ETHEREUM',
-          name: 'USDT (ERC-20)',
-          fee: 15, // USDT
-          minAmount: 20,
-          icon: '💰'
-        },
-        {
-          type: 'USDT_BEP20',
-          network: 'BSC',
-          name: 'USDT (BEP-20)',
-          fee: 0.5, // USDT
+          type: 'USDT_TON',
+          network: 'TON',
+          name: 'USDT (TON)',
+          fee: 0.1, // USDT
           minAmount: 1,
-          icon: '💰'
+          icon: '💎'
         }
       ]
     };
@@ -80,7 +72,7 @@ router.get('/rates', authenticateToken, async (req, res) => {
 router.post('/calculate', [
   authenticateToken,
   body('points').isInt({ min: 1 }),
-  body('walletType').isIn(['USDT_TRC20', 'USDT_ERC20', 'USDT_BEP20'])
+  body('walletType').isIn(['USDT_TRC20', 'USDT_TON'])
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -132,8 +124,7 @@ router.post('/calculate', [
     // Сетевые комиссии
     const networkFees = {
       'USDT_TRC20': 1,
-      'USDT_ERC20': 15,
-      'USDT_BEP20': 0.5
+      'USDT_TON': 0.1
     };
     
     const networkFee = networkFees[walletType] || 1;
@@ -181,7 +172,7 @@ router.post('/withdraw', [
   authenticateToken,
   body('points').isInt({ min: 1 }),
   body('walletAddress').isLength({ min: 20, max: 100 }).trim(),
-  body('walletType').isIn(['USDT_TRC20', 'USDT_ERC20', 'USDT_BEP20']),
+  body('walletType').isIn(['USDT_TRC20', 'USDT_TON']),
   body('deviceFingerprint').optional().isString()
 ], async (req, res) => {
   try {
@@ -259,8 +250,7 @@ router.post('/withdraw', [
     
     const networkFees = {
       'USDT_TRC20': 1,
-      'USDT_ERC20': 15,
-      'USDT_BEP20': 0.5
+      'USDT_TON': 0.1
     };
     
     const networkFee = networkFees[walletType] || 1;
@@ -276,8 +266,7 @@ router.post('/withdraw', [
     // Определяем сеть
     const networks = {
       'USDT_TRC20': 'TRON',
-      'USDT_ERC20': 'ETHEREUM',
-      'USDT_BEP20': 'BSC'
+      'USDT_TON': 'TON'
     };
     
     // Создаем заявку на вывод

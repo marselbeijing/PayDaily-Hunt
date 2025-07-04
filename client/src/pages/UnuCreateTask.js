@@ -153,7 +153,7 @@ export default function UnuCreateTask({ onNavigate }) {
           
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Price (USD) *</label>
+              <label className="block text-sm font-medium mb-2">Price (USDT) *</label>
               <input
                 type="number"
                 name="price"
@@ -178,7 +178,7 @@ export default function UnuCreateTask({ onNavigate }) {
                 <option value="">Select tariff</option>
                 {tariffs.map(tariff => (
                   <option key={tariff.id} value={tariff.id}>
-                    {tariff.name} (min: ${convertRubToUsd(tariff.min_price_rub)})
+                    {tariff.name} (min: {convertRubToUsd(tariff.min_price_rub)} USDT)
                   </option>
                 ))}
               </select>
