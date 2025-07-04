@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { api } from '../services/api';
+import { api, formatPriceInUsd } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function Tasks({ onNavigate }) {
@@ -59,7 +59,7 @@ export default function Tasks({ onNavigate }) {
               {unuTasks.map(task => (
                 <div key={task.id} className="bg-tg-card p-4 rounded-xl shadow border border-blue-400">
                   <div className="font-bold text-lg mb-1">{task.name}</div>
-                  <div className="text-tg-hint text-sm mb-2">Reward: <b>{task.price_rub} RUB</b></div>
+                  <div className="text-tg-hint text-sm mb-2">Reward: <b>{formatPriceInUsd(task.price_rub)}</b></div>
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-tg-hint">Limit: {task.limit_total}</span>
                     <button className="btn btn-secondary btn-sm" onClick={() => onNavigate('unu-task-detail', { taskId: task.id })}>Подробнее</button>

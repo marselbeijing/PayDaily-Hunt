@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { api } from '../services/api';
+import { api, formatPriceInUsd } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function UnuTaskDetail({ taskId, onNavigate }) {
@@ -63,7 +63,7 @@ export default function UnuTaskDetail({ taskId, onNavigate }) {
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
             <span className="text-xs text-tg-hint">Reward:</span>
-            <div className="font-bold">{task.price_rub} RUB</div>
+            <div className="font-bold">{formatPriceInUsd(task.price_rub)}</div>
           </div>
           <div>
             <span className="text-xs text-tg-hint">Status:</span>

@@ -90,6 +90,31 @@ export const formatBalance = (balance) => {
   return balance.toString();
 };
 
+export const getVipLevelInfo = (level) => {
+  const levels = {
+    none: { name: 'Beginner', color: '#6b7280', multiplier: 1.0 },
+    bronze: { name: 'Bronze', color: '#cd7f32', multiplier: 1.1 },
+    silver: { name: 'Silver', color: '#c0c0c0', multiplier: 1.2 },
+    gold: { name: 'Gold', color: '#ffd700', multiplier: 1.3 },
+    platinum: { name: 'Platinum', color: '#e5e4e2', multiplier: 1.5 },
+    diamond: { name: 'Diamond', color: '#b9f2ff', multiplier: 2.0 }
+  };
+  return levels[level] || levels.none;
+};
+
+// Конвертация рублей в доллары (примерный курс 1 USD = 100 RUB)
+export const convertRubToUsd = (rubAmount) => {
+  const exchangeRate = 100; // 1 USD = 100 RUB (приблизительно)
+  const usdAmount = rubAmount / exchangeRate;
+  return usdAmount.toFixed(2);
+};
+
+// Форматирование цены в USD
+export const formatPriceInUsd = (rubAmount) => {
+  const usdAmount = convertRubToUsd(rubAmount);
+  return `$${usdAmount}`;
+};
+
 export const formatDate = (date) => {
   return new Date(date).toLocaleDateString('en-US', {
     day: '2-digit',
@@ -106,18 +131,6 @@ export const formatDateTime = (date) => {
     hour: '2-digit',
     minute: '2-digit'
   });
-};
-
-export const getVipLevelInfo = (level) => {
-  const levels = {
-    none: { name: 'Beginner', color: '#6b7280', multiplier: 1.0 },
-    bronze: { name: 'Bronze', color: '#cd7f32', multiplier: 1.1 },
-    silver: { name: 'Silver', color: '#c0c0c0', multiplier: 1.2 },
-    gold: { name: 'Gold', color: '#ffd700', multiplier: 1.3 },
-    platinum: { name: 'Platinum', color: '#e5e4e2', multiplier: 1.5 },
-    diamond: { name: 'Diamond', color: '#b9f2ff', multiplier: 2.0 }
-  };
-  return levels[level] || levels.none;
 };
 
 export const getTaskCategoryInfo = (category) => {

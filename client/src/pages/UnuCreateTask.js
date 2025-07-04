@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { api } from '../services/api';
+import { api, convertRubToUsd } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function UnuCreateTask({ onNavigate }) {
@@ -153,7 +153,7 @@ export default function UnuCreateTask({ onNavigate }) {
           
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Price (RUB) *</label>
+              <label className="block text-sm font-medium mb-2">Price (USD) *</label>
               <input
                 type="number"
                 name="price"
@@ -178,7 +178,7 @@ export default function UnuCreateTask({ onNavigate }) {
                 <option value="">Select tariff</option>
                 {tariffs.map(tariff => (
                   <option key={tariff.id} value={tariff.id}>
-                    {tariff.name} (min: {tariff.min_price_rub} RUB)
+                    {tariff.name} (min: ${convertRubToUsd(tariff.min_price_rub)})
                   </option>
                 ))}
               </select>

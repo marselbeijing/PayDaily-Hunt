@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { api } from '../services/api';
+import { api, formatPriceInUsd } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function UnuManagement({ onNavigate }) {
@@ -79,22 +79,18 @@ export default function UnuManagement({ onNavigate }) {
 
   const getStatusText = (status) => {
     switch (status) {
-      case 1: return 'New (Need Payment)';
-      case 2: return 'Limit Reached';
-      case 3: return 'Stopped';
       case 4: return 'Active';
-      case 5: return 'Rejected';
+      case 3: return 'Stopped';
       case 6: return 'Under Review';
-      default: return 'Unknown';
+      default: return 'Inactive';
     }
   };
 
   const getReportStatusText = (status) => {
     switch (status) {
-      case 1: return 'In Progress';
-      case 2: return 'Under Review';
-      case 3: return 'Needs Revision';
-      case 6: return 'Paid';
+      case 1: return 'Approved';
+      case 2: return 'Pending';
+      case 3: return 'Rejected';
       default: return 'Unknown';
     }
   };
@@ -132,7 +128,7 @@ export default function UnuManagement({ onNavigate }) {
                 <div className="grid grid-cols-3 gap-4 mb-3 text-sm">
                   <div>
                     <span className="text-tg-hint">Price:</span>
-                    <div className="font-bold">{task.price_rub} RUB</div>
+                    <div className="font-bold">{formatPriceInUsd(task.price_rub)}</div>
                   </div>
                   <div>
                     <span className="text-tg-hint">Limit:</span>
@@ -182,7 +178,7 @@ export default function UnuManagement({ onNavigate }) {
                 </div>
                 
                 <div className="text-sm mb-3">
-                  <span className="text-tg-hint">Price:</span> {report.price_rub} RUB
+                  <span className="text-tg-hint">Price:</span> {formatPriceInUsd(report.price_rub)}
                 </div>
 
                 {report.status === 2 && (
