@@ -15,6 +15,7 @@ app.use(cors({
             process.env.FRONTEND_URL || 'https://pay-daily-hunt.vercel.app',
             'https://pay-daily-hunt.vercel.app',
             'https://www.pay-daily-hunt.vercel.app',
+            'https://paydaily-hunt.vercel.app',
             'https://www.paydailyhunt.site',
             'http://localhost:3000', // For local development
             'http://127.0.0.1:3000',  // Alternative localhost
