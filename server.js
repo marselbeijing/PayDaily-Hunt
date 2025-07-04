@@ -27,10 +27,23 @@ app.use(helmet({
 }));
 
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-domain.com'] 
-    : ['http://localhost:3000', 'https://localhost:3000'],
-  credentials: true
+    origin: function(origin, callback) {
+        const allowed = [
+            process.env.FRONTEND_URL || 'https://pay-daily-hunt.vercel.app',
+            'https://pay-daily-hunt.vercel.app',
+            'https://www.pay-daily-hunt.vercel.app',
+            'http://localhost:3000', // разрешаем локальную разработку
+            'http://127.0.0.1:3000'  // разрешаем альтернативный localhost
+        ];
+        if (!origin || allowed.includes(origin)) {
+            console.log('CORS allow:', origin);
+            callback(null, true);
+        } else {
+            console.log('CORS block:', origin);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
 }));
 
 app.use(express.json({ limit: '10mb' }));
