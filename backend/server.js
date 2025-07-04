@@ -14,6 +14,9 @@ console.log('JWT_SECRET:', process.env.JWT_SECRET ? 'SET' : 'NOT SET');
 
 const app = express();
 
+// Trust proxy для Render
+app.set('trust proxy', 1);
+
 // Middleware
 app.use(helmet());
 app.use(cors({
