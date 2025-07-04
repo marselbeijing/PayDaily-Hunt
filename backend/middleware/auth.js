@@ -18,7 +18,7 @@ const auth = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
     // Находим пользователя
-    const user = await User.findById(decoded.user.id);
+    const user = await User.findById(decoded.userId);
     
     if (!user) {
       return res.status(401).json({
@@ -36,7 +36,7 @@ const auth = async (req, res, next) => {
     }
     
     // Добавляем пользователя в запрос
-    req.user = decoded.user;
+    req.user = decoded;
     req.userDoc = user;
     
     next();
@@ -69,7 +69,7 @@ const auth = async (req, res, next) => {
 const requireVip = (minLevel = 'bronze') => {
   return async (req, res, next) => {
     try {
-      const user = req.userDoc || await User.findById(req.user.id);
+      const user = req.userDoc || await User.findById(req.user.userId);
       
       if (!user) {
         return res.status(404).json({
@@ -105,7 +105,7 @@ const requireVip = (minLevel = 'bronze') => {
 // Middleware для проверки Telegram Premium
 const requirePremium = async (req, res, next) => {
   try {
-    const user = req.userDoc || await User.findById(req.user.id);
+    const user = req.userDoc || await User.findById(req.user.userId);
     
     if (!user) {
       return res.status(404).json({
@@ -137,7 +137,7 @@ const requirePremium = async (req, res, next) => {
 const requireMinTasks = (minTasks) => {
   return async (req, res, next) => {
     try {
-      const user = req.userDoc || await User.findById(req.user.id);
+      const user = req.userDoc || await User.findById(req.user.userId);
       
       if (!user) {
         return res.status(404).json({
@@ -169,7 +169,7 @@ const requireMinTasks = (minTasks) => {
 // Middleware для проверки административных прав
 const requireAdmin = async (req, res, next) => {
   try {
-    const user = req.userDoc || await User.findById(req.user.id);
+    const user = req.userDoc || await User.findById(req.user.userId);
     
     if (!user) {
       return res.status(404).json({
@@ -244,9 +244,9 @@ const userRateLimit = (windowMs = 60000, maxRequests = 60) => {
 // Middleware для логирования активности пользователя
 const logUserActivity = async (req, res, next) => {
   try {
-    if (req.user && req.user.id) {
+    if (req.user && req.user.userId) {
       // Обновляем время последней активности
-      await User.findByIdAndUpdate(req.user.id, {
+      await User.findByIdAndUpdate(req.user.userId, {
         lastLogin: new Date()
       });
     }
