@@ -1,9 +1,10 @@
 import axios from 'axios';
 
-// Use local backend for development, production URL for production
-const API_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://paydaily-hunt.onrender.com/api'
-  : 'http://localhost:5000/api';
+// Позволяет явно задать адрес API через переменную окружения
+const API_URL = process.env.REACT_APP_API_URL
+  || (process.env.NODE_ENV === 'production'
+    ? 'https://paydaily-hunt.onrender.com/api'
+    : 'http://localhost:5000/api');
 
 // Create axios instance
 const apiClient = axios.create({
