@@ -47,7 +47,10 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/paydaily-
 });
 
 const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.on('error', (err) => {
+    console.error('MongoDB connection error:', err.message);
+    console.error('Проверьте, что MongoDB запущен локально или укажите правильный MONGODB_URI в .env!');
+});
 db.once('open', () => {
     console.log('✅ Подключение к MongoDB установлено');
 });
