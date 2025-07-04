@@ -18,7 +18,7 @@ app.use(cors({
             'https://www.paydailyhunt.site',
             'http://localhost:3000', // For local development
             'http://127.0.0.1:3000',  // Alternative localhost
-            'https://paydaily-hunt-q0cszqtje-marsels-projects-edf39f42.vercel.app',
+            'https://paydaily-hunt-qr7fvlasi-marsels-projects-edf39f42.vercel.app',
         ];
         if (!origin || allowed.includes(origin)) {
             console.log('CORS allow:', origin);
