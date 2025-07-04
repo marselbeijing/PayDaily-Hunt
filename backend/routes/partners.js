@@ -13,16 +13,6 @@ router.get('/offers', async (req, res) => {
         
         const offers = [];
         
-        // AdGem офферы
-        if (process.env.ADGEM_API_KEY) {
-            try {
-                const adgemOffers = await getAdgemOffers(country, platform);
-                offers.push(...adgemOffers);
-            } catch (error) {
-                console.error('Ошибка получения AdGem офферов:', error);
-            }
-        }
-        
         // CPALead офферы
         if (process.env.CPALEAD_API_KEY) {
             try {
@@ -30,16 +20,6 @@ router.get('/offers', async (req, res) => {
                 offers.push(...cpaleadOffers);
             } catch (error) {
                 console.error('Ошибка получения CPALead офферов:', error);
-            }
-        }
-        
-        // AdGate Media офферы
-        if (process.env.ADGATE_API_KEY) {
-            try {
-                const adgateOffers = await getAdGateOffers(country, platform);
-                offers.push(...adgateOffers);
-            } catch (error) {
-                console.error('Ошибка получения AdGate офферов:', error);
             }
         }
         
@@ -88,14 +68,8 @@ router.post('/track', async (req, res) => {
         let trackingUrl = '';
         
         switch (partner) {
-            case 'adgem':
-                trackingUrl = `https://adgem.com/api/track?click_id=${clickId}&offer_id=${offerId}`;
-                break;
             case 'cpalead':
                 trackingUrl = `https://cpalead.com/api/track?click_id=${clickId}&offer_id=${offerId}`;
-                break;
-            case 'adgate':
-                trackingUrl = `https://adgatemedia.com/api/track?click_id=${clickId}&offer_id=${offerId}`;
                 break;
         }
         
@@ -124,22 +98,10 @@ router.post('/callback/:partner', async (req, res) => {
         
         // Обработка разных форматов callback'ов
         switch (partner) {
-            case 'adgem':
-                completionId = callbackData.click_id;
-                status = callbackData.status === 'approved' ? 'approved' : 'rejected';
-                rewardAmount = parseFloat(callbackData.payout || 0);
-                break;
-                
             case 'cpalead':
                 completionId = callbackData.subid;
                 status = callbackData.status === '1' ? 'approved' : 'rejected';
                 rewardAmount = parseFloat(callbackData.payout || 0);
-                break;
-                
-            case 'adgate':
-                completionId = callbackData.user_id;
-                status = callbackData.status === 'credited' ? 'approved' : 'rejected';
-                rewardAmount = parseFloat(callbackData.points || 0);
                 break;
                 
             default:
@@ -208,14 +170,8 @@ router.post('/sync', async (req, res) => {
         let offers = [];
         
         switch (partner) {
-            case 'adgem':
-                offers = await getAdgemOffers(country);
-                break;
             case 'cpalead':
                 offers = await getCPALeadOffers(country);
-                break;
-            case 'adgate':
-                offers = await getAdGateOffers(country);
                 break;
             default:
                 return res.status(400).json({ error: 'Неизвестный партнер' });
@@ -255,24 +211,6 @@ router.post('/sync', async (req, res) => {
 
 // Функции для работы с различными партнерами
 
-async function getAdgemOffers(country = 'US', platform = 'mobile') {
-    try {
-        const response = await axios.get('https://adgem.com/api/offers', {
-            params: {
-                api_key: process.env.ADGEM_API_KEY,
-                country,
-                platform,
-                format: 'json'
-            }
-        });
-        
-        return response.data.offers || [];
-    } catch (error) {
-        console.error('AdGem API error:', error);
-        return [];
-    }
-}
-
 async function getCPALeadOffers(country = 'US', platform = 'mobile') {
     try {
         const response = await axios.get('https://cpalead.com/api/offers', {
@@ -287,24 +225,6 @@ async function getCPALeadOffers(country = 'US', platform = 'mobile') {
         return response.data.offers || [];
     } catch (error) {
         console.error('CPALead API error:', error);
-        return [];
-    }
-}
-
-async function getAdGateOffers(country = 'US', platform = 'mobile') {
-    try {
-        const response = await axios.get('https://adgatemedia.com/api/offers', {
-            params: {
-                api_key: process.env.ADGATE_API_KEY,
-                country,
-                platform,
-                format: 'json'
-            }
-        });
-        
-        return response.data.offers || [];
-    } catch (error) {
-        console.error('AdGate API error:', error);
         return [];
     }
 }

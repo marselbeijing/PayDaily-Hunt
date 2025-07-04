@@ -141,7 +141,7 @@ const taskSchema = new mongoose.Schema({
     },
     network: {
       type: String,
-      enum: ['adgem', 'cpalead', 'adgate', 'cointraffic', 'custom', 'internal'],
+      enum: ['cpalead', 'cointraffic', 'custom', 'internal'],
       default: 'internal'
     },
     offerId: {

@@ -61,9 +61,6 @@ export const api = {
     history: () => apiClient.get('/payments/history').then(r => r.data),
     validate: (address) => apiClient.post('/payments/validate', { address }).then(r => r.data),
   },
-  adgem: {
-    offers: (userId) => apiClient.get(`/adgem/offers?user_id=${userId}`).then(r => r.data),
-  },
   unu: {
     tasks: (params) => apiClient.get('/unu/tasks', { params }).then(r => r.data),
     taskDetail: (taskId) => apiClient.get(`/unu/tasks/${taskId}`).then(r => r.data),

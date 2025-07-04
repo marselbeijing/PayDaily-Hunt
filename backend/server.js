@@ -15,6 +15,7 @@ app.use(cors({
             process.env.FRONTEND_URL || 'https://pay-daily-hunt.vercel.app',
             'https://pay-daily-hunt.vercel.app',
             'https://www.pay-daily-hunt.vercel.app',
+            'https://www.paydailyhunt.site',
             'http://localhost:3000', // For local development
             'http://127.0.0.1:3000'  // Alternative localhost
         ];
@@ -61,7 +62,6 @@ const taskRoutes = require('./routes/tasks');
 const userRoutes = require('./routes/users');
 const partnerRoutes = require('./routes/partners');
 const paymentRoutes = require('./routes/payments');
-const adgemRoutes = require('./routes/adgem');
 const ewallRoutes = require('./routes/ewall');
 const unuRoutes = require('./routes/unu');
 
@@ -71,64 +71,8 @@ app.use('/api/tasks', taskRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/partners', partnerRoutes);
 app.use('/api/payments', paymentRoutes);
-app.use('/api/adgem', adgemRoutes);
 app.use('/api/ewall', ewallRoutes);
 app.use('/api/unu', unuRoutes);
-
-// === AdGem Postback Handler ===
-app.get('/api/adgem/postback', async (req, res) => {
-    const { user_id, amount, offer_id, transaction_id, key } = req.query;
-    const POSTBACK_KEY = '9d3ban3jhjbcegg93hjfl6k8'; // из AdGem
-
-    // Валидация ключа
-    if (key !== POSTBACK_KEY) {
-        console.log('❌ Неверный postback key:', key);
-        return res.status(403).json({ error: 'Invalid postback key' });
-    }
-
-    // Логируем все входящие запросы (для теста)
-    console.log('AdGem postback:', req.query);
-
-    if (!user_id || !amount || !offer_id || !transaction_id) {
-        return res.status(400).json({ error: 'Missing required parameters' });
-    }
-
-    try {
-        const User = require('./models/User');
-        const Task = require('./models/Task');
-        const TaskCompletion = require('./models/TaskCompletion');
-        // Находим пользователя
-        const user = await User.findOne({ telegramId: user_id });
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-        // Начисляем награду на user.wallet.balance
-        user.wallet.balance = (user.wallet.balance || 0) + Number(amount);
-        await user.save();
-        // Пробуем найти задание по offer_id
-        const task = await Task.findOne({ 'partner.trackingId': offer_id });
-        if (task) {
-            // Создаём запись о выполнении задания, если её ещё нет
-            const existing = await TaskCompletion.findOne({ user: user._id, task: task._id });
-            if (!existing) {
-                await TaskCompletion.create({
-                    user: user._id,
-                    task: task._id,
-                    status: 'approved',
-                    rewardAmount: Number(amount),
-                    partnerTracking: {
-                        conversionId: transaction_id,
-                        subId: offer_id
-                    }
-                });
-            }
-        }
-        return res.status(200).json({ success: true });
-    } catch (err) {
-        console.error('Ошибка при обработке postback:', err);
-        return res.status(500).json({ error: 'Internal server error' });
-    }
-});
 
 // Базовый маршрут
 app.get('/', (req, res) => {

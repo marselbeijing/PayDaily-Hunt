@@ -82,7 +82,7 @@ const taskCompletionSchema = new mongoose.Schema({
   partner: {
     network: {
       type: String,
-      enum: ['adgem', 'cpalead', 'adgate', 'cointraffic', 'custom', 'internal'],
+      enum: ['cpalead', 'adgate', 'cointraffic', 'custom', 'internal'],
       default: 'internal'
     },
     offerId: {
