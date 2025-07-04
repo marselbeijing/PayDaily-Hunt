@@ -32,43 +32,25 @@ export default function Tasks({ onNavigate }) {
 
   return (
     <div className="p-4 pt-2 pb-20">
-      <h1 className="text-2xl font-bold mb-4">Tasks</h1>
-      {tasks.length === 0 && unuTasks.length === 0 ? (
-        <div className="bg-tg-card p-4 rounded-xl shadow text-tg-hint text-sm">
+      <h1 className="text-2xl font-bold mb-4 text-center">Tasks</h1>
+      {unuTasks.length === 0 ? (
+        <div className="bg-tg-card p-4 rounded-xl shadow text-tg-hint text-sm text-center">
           No available tasks.
         </div>
       ) : (
-        <>
-          {tasks.length > 0 && (
-            <div className="space-y-4 mb-6">
-              {tasks.map(task => (
-                <div key={task._id} className="bg-tg-card p-4 rounded-xl shadow">
-                  <div className="font-bold text-lg mb-1">{task.title}</div>
-                  <div className="text-tg-hint text-sm mb-2">{task.description}</div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-tg-hint">Reward: <b>{task.reward} USDT</b></span>
-                    <button className="btn btn-primary btn-sm" onClick={() => onNavigate('task-detail', { taskId: task._id })}>Complete</button>
-                  </div>
-                </div>
-              ))}
+        <div className="space-y-4 mb-6">
+          <h2 className="text-xl font-semibold mb-2 text-center">Additional tasks</h2>
+          {unuTasks.map(task => (
+            <div key={task.id} className="bg-tg-card p-4 rounded-xl shadow border border-blue-400">
+              <div className="font-bold text-lg mb-1">{task.name}</div>
+              <div className="text-tg-hint text-sm mb-2">Reward: <b>{formatPriceInUsd(task.price_rub)}</b></div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-tg-hint">Limit: {task.limit_total}</span>
+                <button className="btn btn-secondary btn-sm" onClick={() => onNavigate('unu-task-detail', { taskId: task.id })}>Details</button>
+              </div>
             </div>
-          )}
-          {unuTasks.length > 0 && (
-            <div className="space-y-4 mb-6">
-              <h2 className="text-xl font-semibold mb-2">Дополнительные задания</h2>
-              {unuTasks.map(task => (
-                <div key={task.id} className="bg-tg-card p-4 rounded-xl shadow border border-blue-400">
-                  <div className="font-bold text-lg mb-1">{task.name}</div>
-                  <div className="text-tg-hint text-sm mb-2">Reward: <b>{formatPriceInUsd(task.price_rub)}</b></div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-tg-hint">Limit: {task.limit_total}</span>
-                    <button className="btn btn-secondary btn-sm" onClick={() => onNavigate('unu-task-detail', { taskId: task.id })}>Подробнее</button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </>
+          ))}
+        </div>
       )}
     </div>
   );
