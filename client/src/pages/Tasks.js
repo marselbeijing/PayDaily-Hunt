@@ -55,7 +55,7 @@ export default function Tasks({ onNavigate }) {
           )}
           {unuTasks.length > 0 && (
             <div className="space-y-4 mb-6">
-              <h2 className="text-xl font-semibold mb-2">UNU Tasks</h2>
+              <h2 className="text-xl font-semibold mb-2">Дополнительные задания</h2>
               {unuTasks.map(task => (
                 <div key={task.id} className="bg-tg-card p-4 rounded-xl shadow border border-blue-400">
                   <div className="font-bold text-lg mb-1">{task.name}</div>

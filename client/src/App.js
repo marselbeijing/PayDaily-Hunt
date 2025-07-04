@@ -8,6 +8,10 @@ import Navigation from './components/Navigation';
 import TaskDetail from './pages/TaskDetail';
 import Wallet from './pages/Wallet';
 import Leaderboard from './pages/Leaderboard';
+import UnuTaskDetail from './pages/UnuTaskDetail';
+import UnuManagement from './pages/UnuManagement';
+import UnuCreateTask from './pages/UnuCreateTask';
+import EwallOffers from './pages/EwallOffers';
 import FloatingDollars from './components/FloatingDollars';
 import { AuthProvider } from './contexts/AuthContext';
 
@@ -57,6 +61,14 @@ function App() {
         return <Tasks onNavigate={navigateTo} />;
       case 'task-detail':
         return <TaskDetail taskId={selectedTaskId} onNavigate={navigateTo} />;
+      case 'unu-task-detail':
+        return <UnuTaskDetail taskId={selectedTaskId} onNavigate={navigateTo} />;
+      case 'unu-management':
+        return <UnuManagement onNavigate={navigateTo} />;
+      case 'unu-create-task':
+        return <UnuCreateTask onNavigate={navigateTo} />;
+      case 'ewall-offers':
+        return <EwallOffers onNavigate={navigateTo} />;
       case 'profile':
         return <Profile onNavigate={navigateTo} />;
       case 'wallet':
