@@ -8,7 +8,6 @@ export default function UnuTaskDetail({ taskId, onNavigate }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  const [subscribed] = useState(() => localStorage.getItem('pd_telegram_subscribed') === '1');
 
   useEffect(() => {
     if (!taskId) return;
@@ -45,16 +44,6 @@ export default function UnuTaskDetail({ taskId, onNavigate }) {
       setSubmitting(false);
     }
   };
-
-  if (!subscribed) {
-    return (
-      <div className="p-4 pt-2 pb-20 flex flex-col items-center justify-center min-h-[60vh]">
-        <div className="bg-tg-card p-4 rounded-xl shadow text-red-500 text-base text-center font-semibold max-w-md">
-          To start completing tasks, please subscribe to our Telegram channel first.
-        </div>
-      </div>
-    );
-  }
 
   if (loading) return <div className="p-4">Loading task details...</div>;
   if (error) return <div className="p-4 text-red-500">{error}</div>;
