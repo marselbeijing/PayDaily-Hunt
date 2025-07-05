@@ -30,8 +30,13 @@ export default function Tasks({ onNavigate }) {
   if (loadingTasks) return <div className="p-4">Loading tasks...</div>;
   if (error) return <div className="p-4 text-red-500">{error}</div>;
 
-  // Фильтруем только активные UNU задания
-  const activeUnuTasks = unuTasks.filter(task => task.status === 4 || task.status === 'active');
+  // Исключаем только тестовые задания по названию
+  const testTitles = [
+    'Join our Telegram channel',
+    'Install our mobile app',
+    'Take a short survey'
+  ];
+  const paidUnuTasks = unuTasks.filter(task => !testTitles.includes(task.name));
 
   // Фиксированные задания
   const fixedTasks = [
@@ -71,15 +76,15 @@ export default function Tasks({ onNavigate }) {
           </div>
         ))}
       </div>
-      {/* Динамические активные задания */}
-      {activeUnuTasks.length === 0 ? (
+      {/* Динамические платные задания UNU */}
+      {paidUnuTasks.length === 0 ? (
         <div className="bg-tg-card p-4 rounded-xl shadow text-tg-hint text-sm text-center">
           No available tasks.
         </div>
       ) : (
         <div className="space-y-4 mb-6">
           <h2 className="text-xl font-semibold mb-2 text-center">Additional tasks</h2>
-          {activeUnuTasks.map(task => (
+          {paidUnuTasks.map(task => (
             <div key={task.id} className="bg-tg-card p-4 rounded-xl shadow border border-blue-400">
               <div className="font-bold text-lg mb-1">{task.name}</div>
               <div className="text-tg-hint text-sm mb-2">Reward: <b>{formatPriceInUsd(task.price_rub)}</b></div>
