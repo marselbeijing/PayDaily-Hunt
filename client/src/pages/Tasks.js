@@ -167,4 +167,3 @@ export default function Tasks({ onNavigate }) {
     </div>
   );
 } 
-} 
