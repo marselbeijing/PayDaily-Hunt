@@ -14,7 +14,7 @@ export default function Navigation({ currentPage, onNavigate }) {
       {navItems.map(item => (
         <button
           key={item.page}
-          className={`flex flex-col items-center justify-center flex-1 text-xs ${currentPage === item.page ? 'text-blue-500 font-bold' : 'text-tg-hint'}`}
+          className={`flex flex-col items-center justify-center flex-1 text-[10px] font-medium ${currentPage === item.page ? 'text-blue-500 font-bold' : 'text-tg-hint'}`}
           style={{ minWidth: 0 }}
           onClick={() => onNavigate(item.page)}
         >
