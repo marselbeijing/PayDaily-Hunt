@@ -45,11 +45,11 @@ export default function UnuTaskDetail({ taskId, onNavigate }) {
     }
   };
 
-  const isActive = task.status === 2 || task.status === '2' || task.status === 'active';
-
   if (loading) return <div className="p-4">Loading task details...</div>;
   if (error) return <div className="p-4 text-red-500">{error}</div>;
   if (!task) return <div className="p-4">Task not found</div>;
+
+  const isActive = task.status === 2 || task.status === '2' || task.status === 'active';
 
   return (
     <div className="p-4 pt-2 pb-20">
