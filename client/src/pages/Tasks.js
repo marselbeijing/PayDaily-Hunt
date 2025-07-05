@@ -14,7 +14,7 @@ export default function Tasks({ onNavigate }) {
     setLoading(true);
     Promise.all([
       api.tasks.list(),
-      api.unu.tasks()
+      api.unu.tasks({ status: 4 })
     ])
       .then(([data, unuData]) => {
         setTasks(data.tasks || []);
@@ -37,6 +37,9 @@ export default function Tasks({ onNavigate }) {
     'Take a short survey'
   ];
   const paidUnuTasks = unuTasks.filter(task => !testTitles.includes(task.name));
+
+  // Фильтруем только активные UNU задания (на всякий случай)
+  const activeUnuTasks = unuTasks.filter(task => task.status === 4 || task.status === 'active');
 
   // Фиксированные задания
   const fixedTasks = [
@@ -76,15 +79,15 @@ export default function Tasks({ onNavigate }) {
           </div>
         ))}
       </div>
-      {/* Динамические платные задания UNU */}
-      {paidUnuTasks.length === 0 ? (
+      {/* Динамические активные задания UNU */}
+      {activeUnuTasks.length === 0 ? (
         <div className="bg-tg-card p-4 rounded-xl shadow text-tg-hint text-sm text-center">
           No available tasks.
         </div>
       ) : (
         <div className="space-y-4 mb-6">
           <h2 className="text-xl font-semibold mb-2 text-center">Additional tasks</h2>
-          {paidUnuTasks.map(task => (
+          {activeUnuTasks.map(task => (
             <div key={task.id} className="bg-tg-card p-4 rounded-xl shadow border border-blue-400">
               <div className="font-bold text-lg mb-1">{task.name}</div>
               <div className="text-tg-hint text-sm mb-2">Reward: <b>{formatPriceInUsd(task.price_rub)}</b></div>
