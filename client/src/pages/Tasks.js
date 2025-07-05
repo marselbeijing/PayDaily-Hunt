@@ -33,6 +33,16 @@ export default function Tasks({ onNavigate }) {
   }, [user?.telegramId]);
 
   useEffect(() => {
+    const onVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        checkSubscription();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, [user?.telegramId]);
+
+  useEffect(() => {
     if (loading || !token) return;
     setLoading(true);
     Promise.all([
