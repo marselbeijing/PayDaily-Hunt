@@ -121,6 +121,10 @@ export default function Tasks({ onNavigate }) {
 
   return (
     <div className="p-4 pt-2 pb-20">
+      {/* ВРЕМЕННО: отладочная информация */}
+      <div className="mb-2 p-2 bg-yellow-100 text-xs rounded">
+        <div><b>Debug:</b> telegramId: {user?.telegramId || 'нет'} | subscribed: {String(subscribed)}</div>
+      </div>
       <h1 className="text-2xl font-bold mb-4 text-center">Tasks</h1>
       {/* Фиксированные задания */}
       <div className="space-y-4 mb-6">
