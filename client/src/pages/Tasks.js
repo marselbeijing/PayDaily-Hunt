@@ -8,7 +8,6 @@ export default function Tasks({ onNavigate }) {
   const [loadingTasks, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [unuTasks, setUnuTasks] = useState([]);
-  const [showSubscribeModal, setShowSubscribeModal] = useState(false);
 
   // Всегда считаем, что подписка есть
   const subscribed = true;
@@ -40,10 +39,7 @@ export default function Tasks({ onNavigate }) {
   };
 
   const handleUnuDetails = (taskId) => {
-    if (!subscribed) {
-      setShowSubscribeModal(true);
-      return;
-    }
+    // Всегда разрешаем открытие задания
     onNavigate('unu-task-detail', { taskId });
   };
 
@@ -99,13 +95,7 @@ export default function Tasks({ onNavigate }) {
             <div className="flex items-center justify-between">
               <span className="text-xs text-tg-hint">Reward: <b>{task.reward}</b></span>
               {task.id === 'fixed-telegram' ? (
-                subscribed ? (
-                  <span className="text-green-500 font-bold">✔ Subscribed</span>
-                ) : (
-                  <button className="btn btn-primary btn-sm" onClick={handleTelegramComplete}>
-                    Complete
-                  </button>
-                )
+                <span className="text-green-500 font-bold">✔ Subscribed</span>
               ) : (
                 <button className="btn btn-primary btn-sm" disabled>Complete</button>
               )}
@@ -133,15 +123,6 @@ export default function Tasks({ onNavigate }) {
           ))
         )}
       </div>
-      {/* Модальное окно предупреждения */}
-      {showSubscribeModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-          <div className="bg-white rounded-xl p-6 max-w-xs text-center shadow-xl">
-            <div className="text-red-500 font-semibold mb-4">To start completing tasks, please subscribe to our Telegram channel first.</div>
-            <button className="btn btn-primary w-full" onClick={() => setShowSubscribeModal(false)}>OK</button>
-          </div>
-        </div>
-      )}
     </div>
   );
 } 
