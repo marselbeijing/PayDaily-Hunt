@@ -45,6 +45,8 @@ export default function UnuTaskDetail({ taskId, onNavigate }) {
     }
   };
 
+  const isActive = task.status === 2 || task.status === '2' || task.status === 'active';
+
   if (loading) return <div className="p-4">Loading task details...</div>;
   if (error) return <div className="p-4 text-red-500">{error}</div>;
   if (!task) return <div className="p-4">Task not found</div>;
@@ -67,15 +69,7 @@ export default function UnuTaskDetail({ taskId, onNavigate }) {
           </div>
           <div>
             <span className="text-xs text-tg-hint">Status:</span>
-            <div className={`font-bold ${
-              task.status === 4 ? 'text-green-500' : 
-              task.status === 3 ? 'text-red-500' : 
-              task.status === 6 ? 'text-yellow-500' : 'text-gray-500'
-            }`}>
-              {task.status === 4 ? 'Active' : 
-               task.status === 3 ? 'Stopped' : 
-               task.status === 6 ? 'Under Review' : 'Inactive'}
-            </div>
+            <div className={`font-bold ${isActive ? 'text-green-500' : 'text-gray-500'}`}>{isActive ? 'Active' : 'Inactive'}</div>
           </div>
         </div>
 
@@ -98,7 +92,7 @@ export default function UnuTaskDetail({ taskId, onNavigate }) {
         )}
 
         <div className="space-y-2">
-          {task.status === 4 && (
+          {isActive ? (
             <>
               {task.link && (
                 <button 
@@ -116,8 +110,7 @@ export default function UnuTaskDetail({ taskId, onNavigate }) {
                 {submitting ? 'Submitting...' : 'Submit Report'}
               </button>
             </>
-          )}
-          {task.status !== 4 && (
+          ) : (
             <div className="text-center text-tg-hint text-sm">
               This task is not currently active
             </div>
