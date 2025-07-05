@@ -46,7 +46,7 @@ export default function Tasks({ onNavigate }) {
   const activeUnuTasks = unuTasks.filter(task => {
     if (!task.status) return false;
     const s = String(task.status).toLowerCase();
-    return s === 'active' || s === 'активно' || s === 'активный' || s === '1' || s === '4' || s.includes('active') || s.includes('актив');
+    return s === '2' || s === 'active' || s.includes('active');
   });
 
   // Фиксированные задания
