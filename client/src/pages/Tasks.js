@@ -14,12 +14,16 @@ export default function Tasks({ onNavigate }) {
     setLoading(true);
     Promise.all([
       api.tasks.list(),
-      api.unu.tasks({ status: 4 })
+      api.unu.tasks() // Без фильтра по статусу
     ])
       .then(([data, unuData]) => {
         setTasks(data.tasks || []);
         setUnuTasks(unuData.tasks || []);
         setLoading(false);
+        // ВРЕМЕННО: логируем все задания UNU
+        if (window && window.console) {
+          console.log('UNU tasks:', unuData.tasks);
+        }
       })
       .catch(err => {
         setError('Error loading tasks');
@@ -38,8 +42,12 @@ export default function Tasks({ onNavigate }) {
   ];
   const paidUnuTasks = unuTasks.filter(task => !testTitles.includes(task.name));
 
-  // Фильтруем только активные UNU задания (на всякий случай)
-  const activeUnuTasks = unuTasks.filter(task => task.status === 4 || task.status === 'active');
+  // Универсальный фильтр для активных UNU-заданий
+  const activeUnuTasks = unuTasks.filter(task => {
+    if (!task.status) return false;
+    const s = String(task.status).toLowerCase();
+    return s === 'active' || s === 'активно' || s === 'активный' || s === '1' || s === '4' || s.includes('active') || s.includes('актив');
+  });
 
   // Фиксированные задания
   const fixedTasks = [
