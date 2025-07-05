@@ -8,6 +8,9 @@ export default function Tasks({ onNavigate }) {
   const [loadingTasks, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [unuTasks, setUnuTasks] = useState([]);
+  const [subscribed, setSubscribed] = useState(() => {
+    return localStorage.getItem('pd_telegram_subscribed') === '1';
+  });
 
   useEffect(() => {
     if (loading || !token) return;
@@ -30,6 +33,16 @@ export default function Tasks({ onNavigate }) {
         setLoading(false);
       });
   }, [loading, token, user]);
+
+  const handleTelegramComplete = () => {
+    window.open('https://t.me/PayDailyHunt', '_blank');
+    setTimeout(() => {
+      if (window.confirm('Have you subscribed to the channel?')) {
+        setSubscribed(true);
+        localStorage.setItem('pd_telegram_subscribed', '1');
+      }
+    }, 1000);
+  };
 
   if (loadingTasks) return <div className="p-4">Loading tasks...</div>;
   if (error) return <div className="p-4 text-red-500">{error}</div>;
@@ -82,13 +95,23 @@ export default function Tasks({ onNavigate }) {
             <div className="text-tg-hint text-sm mb-2">{task.description}</div>
             <div className="flex items-center justify-between">
               <span className="text-xs text-tg-hint">Reward: <b>{task.reward}</b></span>
-              <button className="btn btn-primary btn-sm" disabled>Complete</button>
+              {task.id === 'fixed-telegram' ? (
+                <button className="btn btn-primary btn-sm" onClick={handleTelegramComplete} disabled={subscribed}>
+                  {subscribed ? 'Completed' : 'Complete'}
+                </button>
+              ) : (
+                <button className="btn btn-primary btn-sm" disabled>Complete</button>
+              )}
             </div>
           </div>
         ))}
       </div>
       {/* Динамические активные задания UNU */}
-      {activeUnuTasks.length === 0 ? (
+      {!subscribed ? (
+        <div className="bg-tg-card p-4 rounded-xl shadow text-red-500 text-base text-center font-semibold">
+          To start completing tasks, please subscribe to our Telegram channel first.
+        </div>
+      ) : activeUnuTasks.length === 0 ? (
         <div className="bg-tg-card p-4 rounded-xl shadow text-tg-hint text-sm text-center">
           No available tasks.
         </div>
