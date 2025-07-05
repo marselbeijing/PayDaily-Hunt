@@ -11,6 +11,26 @@ export default function Tasks({ onNavigate }) {
   const [subscribed, setSubscribed] = useState(() => {
     return localStorage.getItem('pd_telegram_subscribed') === '1';
   });
+  const [showSubscribeModal, setShowSubscribeModal] = useState(false);
+
+  const checkSubscription = async () => {
+    if (!user?.telegramId) return;
+    try {
+      const res = await api.auth.checkTelegramSub(user.telegramId);
+      if (res.isMember) {
+        setSubscribed(true);
+        localStorage.setItem('pd_telegram_subscribed', '1');
+      } else {
+        setSubscribed(false);
+        localStorage.removeItem('pd_telegram_subscribed');
+      }
+    } catch {}
+  };
+
+  useEffect(() => {
+    if (user?.telegramId) checkSubscription();
+    // eslint-disable-next-line
+  }, [user?.telegramId]);
 
   useEffect(() => {
     if (loading || !token) return;
@@ -37,11 +57,16 @@ export default function Tasks({ onNavigate }) {
   const handleTelegramComplete = () => {
     window.open('https://t.me/PayDailyHunt', '_blank');
     setTimeout(() => {
-      if (window.confirm('Have you subscribed to the channel?')) {
-        setSubscribed(true);
-        localStorage.setItem('pd_telegram_subscribed', '1');
-      }
-    }, 1000);
+      checkSubscription();
+    }, 2000);
+  };
+
+  const handleUnuDetails = (taskId) => {
+    if (!subscribed) {
+      setShowSubscribeModal(true);
+      return;
+    }
+    onNavigate('unu-task-detail', { taskId });
   };
 
   if (loadingTasks) return <div className="p-4">Loading tasks...</div>;
@@ -96,9 +121,13 @@ export default function Tasks({ onNavigate }) {
             <div className="flex items-center justify-between">
               <span className="text-xs text-tg-hint">Reward: <b>{task.reward}</b></span>
               {task.id === 'fixed-telegram' ? (
-                <button className="btn btn-primary btn-sm" onClick={handleTelegramComplete} disabled={subscribed}>
-                  {subscribed ? 'Completed' : 'Complete'}
-                </button>
+                subscribed ? (
+                  <span className="text-green-500 font-bold">✔ Subscribed</span>
+                ) : (
+                  <button className="btn btn-primary btn-sm" onClick={handleTelegramComplete}>
+                    Complete
+                  </button>
+                )
               ) : (
                 <button className="btn btn-primary btn-sm" disabled>Complete</button>
               )}
@@ -106,30 +135,36 @@ export default function Tasks({ onNavigate }) {
           </div>
         ))}
       </div>
-      {/* Динамические активные задания UNU */}
-      {!subscribed ? (
-        <div className="bg-tg-card p-4 rounded-xl shadow text-red-500 text-base text-center font-semibold">
-          To start completing tasks, please subscribe to our Telegram channel first.
-        </div>
-      ) : activeUnuTasks.length === 0 ? (
-        <div className="bg-tg-card p-4 rounded-xl shadow text-tg-hint text-sm text-center">
-          No available tasks.
-        </div>
-      ) : (
-        <div className="space-y-4 mb-6">
-          <h2 className="text-xl font-semibold mb-2 text-center">Additional tasks</h2>
-          {activeUnuTasks.map(task => (
+      {/* UNU-задания всегда отображаются */}
+      <div className="space-y-4 mb-6">
+        <h2 className="text-xl font-semibold mb-2 text-center">Additional tasks</h2>
+        {activeUnuTasks.length === 0 ? (
+          <div className="bg-tg-card p-4 rounded-xl shadow text-tg-hint text-sm text-center">
+            No available tasks.
+          </div>
+        ) : (
+          activeUnuTasks.map(task => (
             <div key={task.id} className="bg-tg-card p-4 rounded-xl shadow border border-blue-400">
               <div className="font-bold text-lg mb-1">{task.name}</div>
               <div className="text-tg-hint text-sm mb-2">Reward: <b>{formatPriceInUsd(task.price_rub)}</b></div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-tg-hint">Limit: {task.limit_total}</span>
-                <button className="btn btn-secondary btn-sm" onClick={() => onNavigate('unu-task-detail', { taskId: task.id })}>Details</button>
+                <button className="btn btn-secondary btn-sm" onClick={() => handleUnuDetails(task.id)}>Details</button>
               </div>
             </div>
-          ))}
+          ))
+        )}
+      </div>
+      {/* Модальное окно предупреждения */}
+      {showSubscribeModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+          <div className="bg-white rounded-xl p-6 max-w-xs text-center shadow-xl">
+            <div className="text-red-500 font-semibold mb-4">To start completing tasks, please subscribe to our Telegram channel first.</div>
+            <button className="btn btn-primary w-full" onClick={() => setShowSubscribeModal(false)}>OK</button>
+          </div>
         </div>
       )}
     </div>
   );
+} 
 } 

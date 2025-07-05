@@ -2,8 +2,11 @@ const express = require('express');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const TelegramBot = require('node-telegram-bot-api');
 
 const router = express.Router();
+
+const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: false });
 
 // Валидация данных Telegram WebApp
 function validateTelegramWebAppData(initData) {
@@ -213,6 +216,20 @@ router.post('/checkin', async (req, res) => {
         console.error('Ошибка чек-ина:', error);
         res.status(500).json({ error: 'Внутренняя ошибка сервера' });
     }
+});
+
+// Проверка подписки пользователя на канал
+router.get('/check-telegram-sub', async (req, res) => {
+  try {
+    const { telegramId } = req.query;
+    if (!telegramId) return res.status(400).json({ error: 'No telegramId' });
+    const channel = '@PayDailyHunt';
+    const member = await bot.getChatMember(channel, telegramId);
+    const isMember = ['member', 'administrator', 'creator'].includes(member.status);
+    res.json({ success: true, isMember });
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to check subscription', details: e.message });
+  }
 });
 
 module.exports = router; 

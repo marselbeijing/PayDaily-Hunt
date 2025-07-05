@@ -40,6 +40,7 @@ export const api = {
     telegram: (initData) => apiClient.post('/auth/telegram', { initData }).then(r => r.data),
     checkin: () => apiClient.post('/auth/checkin').then(r => r.data),
     profile: () => apiClient.get('/users/profile').then(r => r.data),
+    checkTelegramSub: (telegramId) => apiClient.get(`/auth/check-telegram-sub?telegramId=${telegramId}`).then(r => r.data),
   },
   tasks: {
     list: () => apiClient.get('/tasks').then(r => r.data),
