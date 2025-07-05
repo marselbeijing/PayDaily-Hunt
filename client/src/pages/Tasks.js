@@ -8,39 +8,10 @@ export default function Tasks({ onNavigate }) {
   const [loadingTasks, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [unuTasks, setUnuTasks] = useState([]);
-  const [subscribed, setSubscribed] = useState(() => {
-    return localStorage.getItem('pd_telegram_subscribed') === '1';
-  });
   const [showSubscribeModal, setShowSubscribeModal] = useState(false);
 
-  const checkSubscription = async () => {
-    if (!user?.telegramId) return;
-    try {
-      const res = await api.auth.checkTelegramSub(user.telegramId);
-      if (res.isMember) {
-        setSubscribed(true);
-        localStorage.setItem('pd_telegram_subscribed', '1');
-      } else {
-        setSubscribed(false);
-        localStorage.removeItem('pd_telegram_subscribed');
-      }
-    } catch {}
-  };
-
-  useEffect(() => {
-    if (user?.telegramId) checkSubscription();
-    // eslint-disable-next-line
-  }, [user?.telegramId]);
-
-  useEffect(() => {
-    const onVisibility = () => {
-      if (document.visibilityState === 'visible') {
-        checkSubscription();
-      }
-    };
-    document.addEventListener('visibilitychange', onVisibility);
-    return () => document.removeEventListener('visibilitychange', onVisibility);
-  }, [user?.telegramId]);
+  // Всегда считаем, что подписка есть
+  const subscribed = true;
 
   useEffect(() => {
     if (loading || !token) return;
@@ -66,9 +37,6 @@ export default function Tasks({ onNavigate }) {
 
   const handleTelegramComplete = () => {
     window.open('https://t.me/PayDailyHunt', '_blank');
-    setTimeout(() => {
-      checkSubscription();
-    }, 2000);
   };
 
   const handleUnuDetails = (taskId) => {
@@ -121,10 +89,6 @@ export default function Tasks({ onNavigate }) {
 
   return (
     <div className="p-4 pt-2 pb-20">
-      {/* ВРЕМЕННО: отладочная информация */}
-      <div className="mb-2 p-2 bg-yellow-100 text-xs rounded">
-        <div><b>Debug:</b> telegramId: {user?.telegramId || 'нет'} | subscribed: {String(subscribed)}</div>
-      </div>
       <h1 className="text-2xl font-bold mb-4 text-center">Tasks</h1>
       {/* Фиксированные задания */}
       <div className="space-y-4 mb-6">
