@@ -49,6 +49,8 @@ export default function UnuTaskDetail({ taskId, onNavigate }) {
   if (error) return <div className="p-4 text-red-500">{error}</div>;
   if (!task) return <div className="p-4">Task not found</div>;
 
+  // Универсальное определение ссылки для старта задания
+  const taskLink = task.link || task.url || task.actionUrl || '';
   const isActive = task.status === 2 || task.status === '2' || task.status === 'active';
 
   return (
@@ -94,10 +96,10 @@ export default function UnuTaskDetail({ taskId, onNavigate }) {
         <div className="space-y-2">
           {isActive ? (
             <>
-              {task.link && (
+              {taskLink && (
                 <button 
                   className="btn btn-primary w-full"
-                  onClick={handleStartTask}
+                  onClick={() => window.open(taskLink, '_blank')}
                 >
                   Start Task
                 </button>
