@@ -11,7 +11,6 @@ import Leaderboard from './pages/Leaderboard';
 import UnuTaskDetail from './pages/UnuTaskDetail';
 import UnuManagement from './pages/UnuManagement';
 import UnuCreateTask from './pages/UnuCreateTask';
-import EwallOffers from './pages/EwallOffers';
 import FloatingDollars from './components/FloatingDollars';
 import { AuthProvider } from './contexts/AuthContext';
 
@@ -67,8 +66,6 @@ function App() {
         return <UnuManagement onNavigate={navigateTo} />;
       case 'unu-create-task':
         return <UnuCreateTask onNavigate={navigateTo} />;
-      case 'ewall-offers':
-        return <EwallOffers onNavigate={navigateTo} />;
       case 'profile':
         return <Profile onNavigate={navigateTo} />;
       case 'wallet':

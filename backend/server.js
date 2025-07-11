@@ -75,7 +75,6 @@ const taskRoutes = require('./routes/tasks');
 const userRoutes = require('./routes/users');
 const partnerRoutes = require('./routes/partners');
 const paymentRoutes = require('./routes/payments');
-const ewallRoutes = require('./routes/ewall');
 const unuRoutes = require('./routes/unu');
 
 // Использование маршрутов
@@ -84,7 +83,6 @@ app.use('/api/tasks', taskRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/partners', partnerRoutes);
 app.use('/api/payments', paymentRoutes);
-app.use('/api/ewall', ewallRoutes);
 app.use('/api/unu', unuRoutes);
 
 // Базовый маршрут
