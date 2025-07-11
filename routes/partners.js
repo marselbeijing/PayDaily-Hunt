@@ -74,7 +74,6 @@ router.get('/offers/sync', authenticateToken, async (req, res) => {
     const syncResults = {
       adgem: { success: 0, errors: 0 },
       cpalead: { success: 0, errors: 0 },
-      adgate: { success: 0, errors: 0 },
       cointraffic: { success: 0, errors: 0 }
     };
     
@@ -94,15 +93,6 @@ router.get('/offers/sync', authenticateToken, async (req, res) => {
     } catch (error) {
       console.error('Ошибка синхронизации CPALead:', error);
       syncResults.cpalead.errors = 1;
-    }
-    
-    // Синхронизация с AdGate Media
-    try {
-      const adgateOffers = await syncAdGateOffers();
-      syncResults.adgate.success = adgateOffers.length;
-    } catch (error) {
-      console.error('Ошибка синхронизации AdGate:', error);
-      syncResults.adgate.errors = 1;
     }
     
     // Синхронизация с CoinTraffic
@@ -273,78 +263,6 @@ async function syncCPALeadOffers() {
   return syncedOffers;
 }
 
-async function syncAdGateOffers() {
-  const response = await axios.get('https://api.adgatemedia.com/v1/offers', {
-    headers: {
-      'Authorization': `Bearer ${process.env.ADGATE_API_KEY}`
-    },
-    params: {
-      wall_code: process.env.ADGATE_WALL_ID,
-      user_id: 'sync_user',
-      format: 'json'
-    }
-  });
-  
-  const offers = response.data.offers || [];
-  const syncedOffers = [];
-  
-  for (const offer of offers) {
-    try {
-      let task = await Task.findOne({
-        'partner.apiProvider': 'adgate',
-        'partner.externalId': offer.id.toString()
-      });
-      
-      const taskData = {
-        title: offer.name,
-        description: offer.description || offer.name,
-        shortDescription: offer.name.substring(0, 100),
-        type: mapAdGateType(offer.category),
-        partner: {
-          name: 'AdGate Media',
-          logo: offer.icon,
-          apiProvider: 'adgate',
-          offerId: offer.id.toString(),
-          externalId: offer.id.toString()
-        },
-        points: Math.round(offer.points),
-        originalPoints: Math.round(offer.points),
-        requirements: {
-          countries: offer.requirements?.countries || [],
-          minAge: offer.requirements?.min_age || 18
-        },
-        limits: {
-          maxCompletionsPerUser: 1
-        },
-        estimatedTime: offer.time_to_complete || 20,
-        instructions: offer.instructions ? [offer.instructions] : [],
-        actionUrl: offer.link,
-        category: mapAdGateCategory(offer.category),
-        difficulty: 'medium',
-        status: 'active',
-        tracking: {
-          autoVerify: false,
-          verificationDelay: 15
-        }
-      };
-      
-      if (task) {
-        Object.assign(task, taskData);
-        await task.save();
-      } else {
-        task = new Task(taskData);
-        await task.save();
-      }
-      
-      syncedOffers.push(task);
-    } catch (error) {
-      console.error('Ошибка синхронизации оффера AdGate:', offer.id, error);
-    }
-  }
-  
-  return syncedOffers;
-}
-
 async function syncCoinTrafficOffers() {
   const response = await axios.get('https://cointraffic.com/api/offers', {
     headers: {
@@ -453,26 +371,6 @@ function mapCPALeadCategory(type) {
     'video': 'entertainment'
   };
   return categoryMap[type] || 'entertainment';
-}
-
-function mapAdGateType(category) {
-  const typeMap = {
-    'survey': 'survey',
-    'download': 'app_install',
-    'registration': 'registration',
-    'video': 'video'
-  };
-  return typeMap[category] || 'registration';
-}
-
-function mapAdGateCategory(category) {
-  const categoryMap = {
-    'survey': 'education',
-    'download': 'gaming',
-    'registration': 'finance',
-    'video': 'entertainment'
-  };
-  return categoryMap[category] || 'entertainment';
 }
 
 // Webhook endpoints для получения конверсий
