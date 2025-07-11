@@ -7,7 +7,6 @@ export default function Tasks({ onNavigate }) {
   const [tasks, setTasks] = useState([]);
   const [loadingTasks, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [unuTasks, setUnuTasks] = useState([]);
 
   // Всегда считаем, что подписка есть
   const subscribed = true;
@@ -15,18 +14,10 @@ export default function Tasks({ onNavigate }) {
   useEffect(() => {
     if (loading || !token) return;
     setLoading(true);
-    Promise.all([
-      api.tasks.list(),
-      api.unu.tasks() // Без фильтра по статусу
-    ])
-      .then(([data, unuData]) => {
+    api.tasks.list()
+      .then((data) => {
         setTasks(data.tasks || []);
-        setUnuTasks(unuData.tasks || []);
         setLoading(false);
-        // ВРЕМЕННО: логируем все задания UNU
-        if (window && window.console) {
-          console.log('UNU tasks:', unuData.tasks);
-        }
       })
       .catch(err => {
         setError('Error loading tasks');
@@ -38,28 +29,12 @@ export default function Tasks({ onNavigate }) {
     window.open('https://t.me/PayDailyHunt', '_blank');
   };
 
-  const handleUnuDetails = (taskId) => {
-    // Всегда разрешаем открытие задания
-    onNavigate('unu-task-detail', { taskId });
-  };
+
 
   if (loadingTasks) return <div className="p-4">Loading tasks...</div>;
   if (error) return <div className="p-4 text-red-500">{error}</div>;
 
-  // Исключаем только тестовые задания по названию
-  const testTitles = [
-    'Join our Telegram channel',
-    'Install our mobile app',
-    'Take a short survey'
-  ];
-  const paidUnuTasks = unuTasks.filter(task => !testTitles.includes(task.name));
 
-  // Универсальный фильтр для активных UNU-заданий
-  const activeUnuTasks = unuTasks.filter(task => {
-    if (!task.status) return false;
-    const s = String(task.status).toLowerCase();
-    return s === '2' || s === 'active' || s.includes('active');
-  });
 
   // Фиксированные задания
   const fixedTasks = [
@@ -103,26 +78,7 @@ export default function Tasks({ onNavigate }) {
           </div>
         ))}
       </div>
-      {/* UNU-задания всегда отображаются */}
-      <div className="space-y-4 mb-6">
-        <h2 className="text-xl font-semibold mb-2 text-center">Additional tasks</h2>
-        {activeUnuTasks.length === 0 ? (
-          <div className="bg-tg-card p-4 rounded-xl shadow text-tg-hint text-sm text-center">
-            No available tasks.
-          </div>
-        ) : (
-          activeUnuTasks.map(task => (
-            <div key={task.id} className="bg-tg-card p-4 rounded-xl shadow border border-blue-400">
-              <div className="font-bold text-lg mb-1">{task.name}</div>
-              <div className="text-tg-hint text-sm mb-2">Reward: <b>{formatPriceInUsd(task.price_rub)}</b></div>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-tg-hint">Limit: {task.limit_total}</span>
-                <button className="btn btn-secondary btn-sm" onClick={() => handleUnuDetails(task.id)}>Details</button>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
+
     </div>
   );
 } 

@@ -9,7 +9,7 @@ console.log('🔧 Environment variables check:');
 console.log('NODE_ENV:', process.env.NODE_ENV);
 console.log('PORT:', process.env.PORT);
 console.log('MONGODB_URI:', process.env.MONGODB_URI ? 'SET' : 'NOT SET');
-console.log('UNU_API_KEY:', process.env.UNU_API_KEY ? 'SET' : 'NOT SET');
+
 console.log('JWT_SECRET:', process.env.JWT_SECRET ? 'SET' : 'NOT SET');
 
 const app = express();
@@ -76,7 +76,7 @@ const userRoutes = require('./routes/users');
 const partnerRoutes = require('./routes/partners');
 const paymentRoutes = require('./routes/payments');
 const ewallRoutes = require('./routes/ewall');
-const unuRoutes = require('./routes/unu');
+
 
 // Использование маршрутов
 app.use('/api/auth', authRoutes);
@@ -85,7 +85,6 @@ app.use('/api/users', userRoutes);
 app.use('/api/partners', partnerRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/ewall', ewallRoutes);
-app.use('/api/unu', unuRoutes);
 
 // Базовый маршрут
 app.get('/', (req, res) => {

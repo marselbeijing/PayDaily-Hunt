@@ -6,30 +6,19 @@ export default function Profile({ onNavigate }) {
   const { user, logout, loading: authLoading, token } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [unuStats, setUnuStats] = useState(null);
-  const [loadingUnu, setLoadingUnu] = useState(true);
 
   useEffect(() => {
     if (authLoading || !token) return;
     Promise.all([
       api.auth.profile(),
-      api.users.referrals(),
-      api.unu.balance(),
-      api.unu.tasks({ status: 4 }) // активные задания
+      api.users.referrals()
     ])
-      .then(([profileData, referralsData, unuBalanceData, unuTasksData]) => {
-        setUnuStats({
-          balance: unuBalanceData.balance,
-          blocked_money: unuBalanceData.blocked_money,
-          activeTasks: unuTasksData.tasks?.length || 0
-        });
+      .then(() => {
         setLoading(false);
-        setLoadingUnu(false);
       })
       .catch(() => {
         setError('Error loading profile');
         setLoading(false);
-        setLoadingUnu(false);
       });
   }, [authLoading, token]);
 
@@ -53,36 +42,7 @@ export default function Profile({ onNavigate }) {
         <div className="text-sm text-tg-hint">Completed tasks: {user?.completedTasks ?? 0}</div>
         <div className="text-sm text-tg-hint">Total earned: {user?.totalEarned ?? 0} USDT</div>
       </div>
-      <div className="bg-tg-card p-4 rounded-xl shadow mb-4 w-full flex flex-col items-center text-center">
-        <div className="text-lg font-bold mb-2">UNU Statistics</div>
-        {loadingUnu ? (
-          <div className="text-sm text-tg-hint">Loading UNU data...</div>
-        ) : unuStats ? (
-          <>
-            <div className="text-sm text-tg-hint mb-1">UNU Balance: {unuStats.balance}</div>
-            <div className="text-sm text-tg-hint mb-1">Active Tasks: {unuStats.activeTasks}</div>
-            {unuStats.blocked_money > 0 && (
-              <div className="text-sm text-yellow-600">Blocked: {unuStats.blocked_money} UNU</div>
-            )}
-          </>
-        ) : (
-          <div className="text-sm text-tg-hint">Unable to load UNU data</div>
-        )}
-      </div>
-
       <div className="space-y-2 w-full max-w-xs">
-        <button 
-          className="btn btn-primary w-full"
-          onClick={() => onNavigate('unu-management')}
-        >
-          Manage UNU Tasks
-        </button>
-        <button 
-          className="btn btn-secondary w-full"
-          onClick={() => onNavigate('unu-create-task')}
-        >
-          Create UNU Task
-        </button>
         <button className="btn btn-secondary w-full" onClick={logout}>Logout</button>
       </div>
     </div>

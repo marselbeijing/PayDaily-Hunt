@@ -10,27 +10,16 @@ export default function Wallet({ onNavigate }) {
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const [walletAddress, setWalletAddress] = useState('');
   const [withdrawing, setWithdrawing] = useState(false);
-  const [unuBalance, setUnuBalance] = useState(null);
-  const [unuExpenses, setUnuExpenses] = useState([]);
-  const [loadingUnu, setLoadingUnu] = useState(true);
 
   useEffect(() => {
-    Promise.all([
-      api.payments.history(),
-      api.unu.balance(),
-      api.unu.expenses()
-    ])
-      .then(([paymentsData, unuBalanceData, unuExpensesData]) => {
+    api.payments.history()
+      .then((paymentsData) => {
         setWithdrawals(paymentsData.withdrawals || []);
-        setUnuBalance(unuBalanceData);
-        setUnuExpenses(unuExpensesData.group_by_days || []);
         setLoading(false);
-        setLoadingUnu(false);
       })
       .catch(() => {
         setError('Error loading wallet data');
         setLoading(false);
-        setLoadingUnu(false);
       });
   }, []);
 
@@ -70,39 +59,7 @@ export default function Wallet({ onNavigate }) {
         <div className="text-3xl font-mono font-bold">{user?.balance ?? 0} <span className="text-base font-normal">USDT</span></div>
       </div>
 
-      <div className="bg-tg-card p-4 rounded-xl shadow mb-6">
-        <div className="text-lg font-bold mb-2">UNU Balance</div>
-        {loadingUnu ? (
-          <div>Loading UNU data...</div>
-        ) : unuBalance ? (
-          <>
-            <div className="text-2xl font-mono font-bold mb-2">
-              {unuBalance.balance} <span className="text-base font-normal">UNU</span>
-            </div>
-            {unuBalance.blocked_money > 0 && (
-              <div className="text-sm text-yellow-600">
-                Blocked: {unuBalance.blocked_money} UNU
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="text-tg-hint text-sm">Unable to load UNU balance</div>
-        )}
-      </div>
 
-      {unuExpenses.length > 0 && (
-        <div className="bg-tg-card p-4 rounded-xl shadow mb-6">
-          <div className="text-lg font-bold mb-4">UNU Expenses (Last 7 Days)</div>
-          <div className="space-y-2">
-            {unuExpenses.slice(0, 7).map((expense, idx) => (
-              <div key={idx} className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                <div className="text-sm">{expense.date}</div>
-                <div className="font-mono text-sm">{expense.expenses} UNU</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       <div className="bg-tg-card p-4 rounded-xl shadow mb-6">
         <div className="text-lg font-bold mb-4">Withdraw Funds</div>
