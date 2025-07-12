@@ -1,0 +1,596 @@
+.referrals-page {
+  min-height: 100vh;
+  background: var(--tg-theme-bg-color, #ffffff);
+  color: var(--tg-theme-text-color, #000000);
+  padding: 20px 0;
+}
+
+.referrals-page .container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Заголовок */
+.referrals-header {
+  text-align: center;
+  margin-bottom: 24px;
+  padding: 16px 0;
+}
+
+.referrals-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.referrals-header .subtitle {
+  font-size: 16px;
+  color: var(--tg-theme-hint-color, #666);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Табы */
+.referrals-tabs {
+  display: flex;
+  background: var(--tg-theme-secondary-bg-color, #f5f5f5);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 24px;
+}
+
+.tab {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--tg-theme-hint-color, #666);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab.active {
+  background: var(--tg-theme-button-color, #0088cc);
+  color: var(--tg-theme-button-text-color, #ffffff);
+}
+
+/* Статистика */
+.stats-section {
+  margin-bottom: 32px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+}
+
+.stat-card.primary {
+  border-left: 4px solid #667eea;
+}
+
+.stat-card.success {
+  border-left: 4px solid #2ed573;
+}
+
+.stat-card.info {
+  border-left: 4px solid #0088cc;
+}
+
+.stat-card.warning {
+  border-left: 4px solid #ffa502;
+}
+
+.stat-icon {
+  font-size: 32px;
+  margin-right: 16px;
+}
+
+.stat-info {
+  flex: 1;
+}
+
+.stat-info .stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.stat-info .stat-label {
+  font-size: 12px;
+  color: var(--tg-theme-hint-color, #666);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Как это работает */
+.how-it-works {
+  margin-bottom: 32px;
+}
+
+.how-it-works h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  text-align: center;
+}
+
+.steps-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.step-card {
+  display: flex;
+  align-items: flex-start;
+  background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--tg-theme-button-color, #0088cc);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+.step-content h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--tg-theme-text-color, #000000);
+}
+
+.step-content p {
+  font-size: 14px;
+  color: var(--tg-theme-hint-color, #666);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Преимущества */
+.benefits-section {
+  margin-bottom: 32px;
+}
+
+.benefits-section h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  text-align: center;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.benefit-card {
+  background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.benefit-card:hover {
+  transform: translateY(-2px);
+}
+
+.benefit-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.benefit-card h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--tg-theme-text-color, #000000);
+}
+
+.benefit-card p {
+  font-size: 14px;
+  color: var(--tg-theme-hint-color, #666);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Список рефералов */
+.referrals-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.list-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--tg-theme-text-color, #000000);
+}
+
+.refresh-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.refresh-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.referrals-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.referral-card {
+  display: flex;
+  align-items: center;
+  background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.referral-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  margin-right: 16px;
+}
+
+.referral-info {
+  flex: 1;
+}
+
+.referral-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--tg-theme-text-color, #000000);
+  margin-bottom: 4px;
+}
+
+.referral-stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+
+.referral-stats .stat {
+  display: flex;
+  gap: 4px;
+}
+
+.referral-stats .stat-label {
+  font-size: 12px;
+  color: var(--tg-theme-hint-color, #666);
+}
+
+.referral-stats .stat-value {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--tg-theme-text-color, #000000);
+}
+
+.referral-date {
+  font-size: 12px;
+  color: var(--tg-theme-hint-color, #666);
+}
+
+.referral-status {
+  margin-left: 16px;
+}
+
+.status {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status.active {
+  background: rgba(46, 213, 115, 0.1);
+  color: #2ed573;
+}
+
+.status.inactive {
+  background: rgba(255, 71, 87, 0.1);
+  color: #ff4757;
+}
+
+/* Пустое состояние */
+.empty-referrals {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-icon {
+  font-size: 64px;
+  margin-bottom: 24px;
+}
+
+.empty-referrals h4 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  color: var(--tg-theme-text-color, #000000);
+}
+
+.empty-referrals p {
+  font-size: 16px;
+  color: var(--tg-theme-hint-color, #666);
+  margin: 0 0 32px 0;
+  line-height: 1.4;
+}
+
+.empty-actions {
+  display: flex;
+  justify-content: center;
+}
+
+/* Поделиться */
+.share-content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.referral-code-section,
+.referral-link-section {
+  background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.referral-code-section h3,
+.referral-link-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: var(--tg-theme-text-color, #000000);
+}
+
+.code-display,
+.link-display {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.code-text,
+.link-text {
+  flex: 1;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: var(--tg-theme-text-color, #000000);
+  word-break: break-all;
+}
+
+.copy-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  margin-left: 8px;
+}
+
+.copy-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Кнопки поделиться */
+.share-buttons h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: var(--tg-theme-text-color, #000000);
+}
+
+.share-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.share-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.share-btn.telegram {
+  background: #0088cc;
+  color: white;
+}
+
+.share-btn.whatsapp {
+  background: #25d366;
+  color: white;
+}
+
+.share-btn.copy {
+  background: var(--tg-theme-button-color, #0088cc);
+  color: var(--tg-theme-button-text-color, #ffffff);
+}
+
+.share-btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+.share-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.share-text {
+  font-size: 12px;
+}
+
+/* Советы */
+.tips-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: var(--tg-theme-text-color, #000000);
+}
+
+.tips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tip-item {
+  display: flex;
+  align-items: flex-start;
+  background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.tip-icon {
+  font-size: 24px;
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+.tip-content h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--tg-theme-text-color, #000000);
+}
+
+.tip-content p {
+  font-size: 14px;
+  color: var(--tg-theme-hint-color, #666);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Загрузка */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px;
+}
+
+.loading-spinner::after {
+  content: '';
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--tg-theme-hint-color, #ddd);
+  border-top: 3px solid var(--tg-theme-button-color, #0088cc);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+  .referrals-page .container {
+    padding: 0 16px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .benefits-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .share-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .referral-stats {
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .referrals-header h1 {
+    font-size: 24px;
+  }
+  
+  .referrals-header .subtitle {
+    font-size: 14px;
+  }
+}

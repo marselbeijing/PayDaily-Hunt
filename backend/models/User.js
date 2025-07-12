@@ -64,6 +64,24 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    referrals: [{
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        totalEarned: {
+            type: Number,
+            default: 0
+        },
+        tasksCompleted: {
+            type: Number,
+            default: 0
+        },
+        joinedAt: {
+            type: Date,
+            default: Date.now
+        }
+    }],
     // Статистика
     tasksCompleted: {
         type: Number,

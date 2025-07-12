@@ -1,0 +1,467 @@
+.profile-page {
+  min-height: 100vh;
+  background: var(--tg-theme-bg-color, #ffffff);
+  color: var(--tg-theme-text-color, #000000);
+  padding: 20px 0;
+}
+
+.profile-page .container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Заголовок профиля */
+.profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding: 16px 0;
+}
+
+.profile-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.profile-avatar {
+  width: 60px;
+  height: 60px;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 600;
+  color: white;
+}
+
+/* Табы */
+.profile-tabs {
+  display: flex;
+  background: var(--tg-theme-secondary-bg-color, #f5f5f5);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 24px;
+}
+
+.tab {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--tg-theme-hint-color, #666);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab.active {
+  background: var(--tg-theme-button-color, #0088cc);
+  color: var(--tg-theme-button-text-color, #ffffff);
+}
+
+/* Карточки профиля */
+.profile-card {
+  background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.profile-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: var(--tg-theme-text-color, #000000);
+}
+
+/* Информация профиля */
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-row .label {
+  font-size: 14px;
+  color: var(--tg-theme-hint-color, #666);
+}
+
+.info-row .value {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--tg-theme-text-color, #000000);
+}
+
+.vip-level {
+  font-weight: 600;
+}
+
+/* Статистика */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--tg-theme-button-color, #0088cc);
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--tg-theme-hint-color, #666);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Реферальная программа */
+.referral-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.referral-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.referral-stat {
+  text-align: center;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.referral-stat .stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2ed573;
+  margin-bottom: 4px;
+}
+
+.referral-stat .stat-label {
+  font-size: 12px;
+  color: var(--tg-theme-hint-color, #666);
+}
+
+/* Реферальный код */
+.referral-code-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.referral-code,
+.referral-link {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.code-label,
+.link-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--tg-theme-text-color, #000000);
+}
+
+.code-display,
+.link-display {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.code-text,
+.link-text {
+  flex: 1;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: var(--tg-theme-text-color, #000000);
+  word-break: break-all;
+}
+
+.copy-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  margin-left: 8px;
+}
+
+.copy-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Преимущества реферальной программы */
+.referral-benefits {
+  background: rgba(46, 213, 115, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid rgba(46, 213, 115, 0.2);
+}
+
+.referral-benefits h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  color: #2ed573;
+}
+
+.referral-benefits ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.referral-benefits li {
+  font-size: 14px;
+  color: var(--tg-theme-text-color, #000000);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.referral-benefits li:last-child {
+  margin-bottom: 0;
+}
+
+/* Контент рефералов */
+.referrals-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Статистика рефералов */
+.referrals-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.stat-icon {
+  font-size: 24px;
+  margin-right: 12px;
+}
+
+.stat-info {
+  flex: 1;
+}
+
+.stat-info .stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--tg-theme-button-color, #0088cc);
+  margin-bottom: 2px;
+}
+
+.stat-info .stat-label {
+  font-size: 12px;
+  color: var(--tg-theme-hint-color, #666);
+}
+
+/* Список рефералов */
+.referrals-list h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: var(--tg-theme-text-color, #000000);
+}
+
+.referrals-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.referral-card {
+  display: flex;
+  align-items: center;
+  background: var(--tg-theme-secondary-bg-color, #f8f9fa);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.referral-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  margin-right: 16px;
+}
+
+.referral-info {
+  flex: 1;
+}
+
+.referral-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--tg-theme-text-color, #000000);
+  margin-bottom: 4px;
+}
+
+.referral-stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+
+.referral-stats span {
+  font-size: 12px;
+  color: var(--tg-theme-hint-color, #666);
+}
+
+.referral-date {
+  font-size: 12px;
+  color: var(--tg-theme-hint-color, #666);
+}
+
+/* Пустое состояние */
+.empty-referrals {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.empty-referrals h4 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--tg-theme-text-color, #000000);
+}
+
+.empty-referrals p {
+  font-size: 14px;
+  color: var(--tg-theme-hint-color, #666);
+  margin: 0 0 24px 0;
+  line-height: 1.4;
+}
+
+.share-btn {
+  background: var(--tg-theme-button-color, #0088cc);
+  color: var(--tg-theme-button-text-color, #ffffff);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.share-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Загрузка */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.loading-spinner::after {
+  content: '';
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--tg-theme-hint-color, #ddd);
+  border-top: 3px solid var(--tg-theme-button-color, #0088cc);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+  .profile-page .container {
+    padding: 0 16px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .referral-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .referrals-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .referral-stats {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

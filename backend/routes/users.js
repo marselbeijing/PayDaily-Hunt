@@ -56,6 +56,11 @@ router.get('/profile', auth, async (req, res) => {
             }
         ]);
         
+        // Получить количество рефералов
+        const referralsCount = await User.countDocuments({
+            referredBy: user._id
+        });
+        
         res.json({
             success: true,
             user: {
@@ -63,7 +68,9 @@ router.get('/profile', auth, async (req, res) => {
                 stats: {
                     completedTasks,
                     todayEarnings: todayEarnings[0]?.total || 0
-                }
+                },
+                referrals: referralsCount,
+                referralLink: `${process.env.FRONTEND_URL || 'https://t.me/your_bot'}?ref=${user.referralCode}`
             }
         });
         
@@ -200,7 +207,7 @@ router.get('/referrals', auth, async (req, res) => {
         
         const referrals = await User.find({
             referredBy: user._id
-        }).select('displayName registrationDate points tasksCompleted');
+        }).select('displayName registrationDate points tasksCompleted totalEarned');
         
         const referralStats = {
             totalReferrals: referrals.length,
@@ -213,7 +220,7 @@ router.get('/referrals', auth, async (req, res) => {
             referrals,
             stats: referralStats,
             referralCode: user.referralCode,
-            referralLink: `https://t.me/your_bot?start=${user.referralCode}`
+            referralLink: `${process.env.FRONTEND_URL || 'https://t.me/your_bot'}?ref=${user.referralCode}`
         });
         
     } catch (error) {
