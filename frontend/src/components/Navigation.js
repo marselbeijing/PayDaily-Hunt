@@ -20,6 +20,11 @@ const Navigation = () => {
       label: 'Задания'
     },
     {
+      path: '/referrals',
+      icon: '👥',
+      label: 'Рефералы'
+    },
+    {
       path: '/leaderboard',
       icon: '🏆',
       label: 'Рейтинг'
